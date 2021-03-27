@@ -45,8 +45,8 @@ const useStyles = makeStyles({
   },
   alert: {
     position: 'fixed',
-    left: 3,
-    top: 3,
+    left: 7,
+    top: 7,
   },
 });
 
@@ -76,9 +76,13 @@ const PrintTable = (props) => {
       .then((data) => {
         if (data) {
           if (data['<২০']) setZeroRange(data['<২০']);
+          else setZeroRange({ ...ageRangeValue });
           if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+          else setTwentyRange({ ...ageRangeValue });
           if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+          else setThirtyRange({ ...ageRangeValue });
           if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+          else setFortyRange({ ...ageRangeValue });
         } else {
           setDataNull(true);
           setZeroRange({ ...ageRangeValue });
@@ -87,7 +91,7 @@ const PrintTable = (props) => {
           setFortyRange({ ...ageRangeValue });
           setTimeout(() => {
             setDataNull(false);
-          }, 2500);
+          }, 3700);
         }
       });
   }, [riportingYear, unionName, unit]);

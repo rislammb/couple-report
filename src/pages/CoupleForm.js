@@ -73,8 +73,8 @@ const useStyles = makeStyles((theme) => ({
   },
   alert: {
     position: 'fixed',
-    left: 3,
-    top: 3,
+    left: 7,
+    top: 7,
   },
 }));
 
@@ -144,7 +144,7 @@ const CoupleForm = (props) => {
           setSubmitingData(false);
           setTimeout(() => {
             setSaveCompleted(false);
-          }, 2500);
+          }, 3700);
         })
         .catch((err) => {
           console.log('Data saved Faild!', err);
@@ -195,7 +195,7 @@ const CoupleForm = (props) => {
         )}
         <div className={classes.topContainer}>
           <Typography variant='h5' className={classes.header}>
-            সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-২০২১
+            সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-{riportingYear}
           </Typography>
         </div>
         <form className={classes.form} onSubmit={handleSubmit}>

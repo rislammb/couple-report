@@ -117,10 +117,11 @@ const PrintPage = (props) => {
             </Typography>
             <Typography variant='body2'>(বছরে একবার পূরণীয়)</Typography>
             <div className={classes.info}>
-              <Typography component='div'>ইউনিয়নঃ {unionName}</Typography>
+              <Typography>ইউনিয়নঃ {unionName}</Typography>
+              <Typography>ইউনিটঃ {unit}</Typography>
               <Typography>উপজেলাঃ বাগমারা</Typography>
               <Typography>জেলাঃ রাজশাহী</Typography>
-              <Typography>বছরঃ {riportingYear}</Typography>
+              <Typography>বছরঃ {riportingYear}খ্রিঃ</Typography>
             </div>
             <PrintTable
               riportingYear={riportingYear}
