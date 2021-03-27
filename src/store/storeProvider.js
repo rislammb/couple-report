@@ -81,11 +81,11 @@ const StoreProvider = () => {
       })
       .catch((err) => {
         if (err.code === 'auth/email-already-in-use') {
-          setUserError({ create: 'Email Already In Use' });
+          setUserError({ create: 'এই ইমেইল আগেই ব্যবহৃত হয়েছে!' });
         } else if (err.code === 'auth/network-request-failed') {
-          setUserError({ create: "Registration doesn't work offline" });
+          setUserError({ create: 'একাউন্ট খুলতে ইন্টারনেট সংযোগ দিন!' });
         } else {
-          setUserError({ create: 'Something went wrong!' });
+          setUserError({ create: 'কিছু সমস্যা হয়েছে! আবার চেষ্টা করুন' });
         }
       });
   };
@@ -105,13 +105,15 @@ const StoreProvider = () => {
       )
       .catch((err) => {
         if (err.code === 'auth/user-not-found') {
-          setUserError({ login: 'User not found! Please Create Your Account' });
+          setUserError({
+            login: 'ইউজার খুঁজে পাওয়া যায় নি! আপনার একাউন্ট খুলুন',
+          });
         } else if (err.code === 'auth/wrong-password') {
-          setUserError({ login: 'Password not correct' });
+          setUserError({ login: 'পাসওয়ার্ড সঠিক নয়!' });
         } else if (err.code === 'auth/network-request-failed') {
-          setUserError({ login: "Login doesn't work offline" });
+          setUserError({ login: 'লগইন করতে ইন্টারনেট সংযোগ দিন!' });
         } else {
-          setUserError({ login: 'Something went wrong!' });
+          setUserError({ login: 'কিছু সমস্যা হয়েছে! আবার চেষ্টা করুন' });
         }
       });
   };
@@ -126,12 +128,12 @@ const StoreProvider = () => {
       .catch((err) => {
         if (err.code === 'auth/user-not-found') {
           setUserError({
-            recover: 'User not found!',
+            recover: 'ইউজার খুঁজে পাওয়া যায় নি! আপনার একাউন্ট খুলুন',
           });
         } else if (err.code === 'auth/network-request-failed') {
-          setUserError({ recover: "Send Email doesn't work offline" });
+          setUserError({ recover: 'লিঙ্ক পেতে ইন্টারনেট সংযোগ দিন!' });
         } else {
-          setUserError({ recover: 'Something went wrong!' });
+          setUserError({ recover: 'কিছু সমস্যা হয়েছে! আবার চেষ্টা করুন' });
         }
       });
   };

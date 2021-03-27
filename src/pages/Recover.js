@@ -60,9 +60,9 @@ const useStyles = makeStyles((theme) => ({
 
 const validationSchema = yup.object({
   email: yup
-    .string('Enter your email')
-    .email('Enter a valid email')
-    .required('Email is required'),
+    .string('আপনার ইমেইল দিন')
+    .email('সঠিক ইমেইল দিন')
+    .required('ইমেইল দিতেই হবে'),
 });
 
 const Recover = () => {
@@ -105,10 +105,7 @@ const Recover = () => {
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
-        <CardHeader
-          className={classes.header}
-          title='একাউন্ট পুনরুদ্ধারের জন্য'
-        />
+        <CardHeader className={classes.header} title='একাউন্ট পুনরুদ্ধার' />
         <CardContent>
           <form onSubmit={formik.handleSubmit}>
             <EmailField

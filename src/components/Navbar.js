@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = (props) => {
+const Navbar = () => {
   const classes = useStyles();
 
   const { darkMode, toggleDarkMode } = useContext(StoreContext);
@@ -45,9 +45,9 @@ const Navbar = (props) => {
     <div className={classes.root}>
       <AppBar position='static'>
         <Toolbar>
-          <Typography variant='h4' noWrap className={classes.title}>
+          <Typography variant='h6' noWrap className={classes.title}>
             <NavLink to='/' className={classes.logoLink}>
-              r
+              হোম
             </NavLink>
           </Typography>
           <Switch

@@ -63,18 +63,18 @@ const useStyles = makeStyles((theme) => ({
 
 const validationSchema = yup.object({
   name: yup
-    .string('Enter your Name')
-    .min(3, 'Name should be of minimum 3 characters length')
-    .required('Name is required'),
-  union: yup.string('Select your Union').required('Union is required'),
+    .string('আপনার নাম দিন')
+    .min(3, 'নাম কমপক্ষে ৭ অক্ষরের হতে হবে')
+    .required('নাম দিতেই হবে'),
+  union: yup.string('আপনার ইউনিয়ন সিলেক্ট করুন').required('ইউনিয়ন দিতেই হবে'),
   email: yup
-    .string('Enter your email')
-    .email('Enter a valid email')
-    .required('Email is required'),
+    .string('আপনার ইমেইল দিন')
+    .email('সঠিক ইমেইল দিন')
+    .required('ইমেইল দিতেই হবে'),
   password: yup
-    .string('Enter your password')
-    .min(7, 'Password should be of minimum 7 characters length')
-    .required('Password is required'),
+    .string('আপনার পাসওয়ার্ড দিন')
+    .min(7, 'পাসওয়ার্ড কমপক্ষে ৭ অক্ষরের হতে হবে')
+    .required('পাসওয়ার্ড দিতেই হবে'),
 });
 
 const CreateAccount = () => {
@@ -86,7 +86,7 @@ const CreateAccount = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      union: '',
+      union: '০১-গোবিন্দপাড়া',
       email: '',
       password: '',
     },
@@ -130,8 +130,8 @@ const CreateAccount = () => {
               <UnionList
                 union={formik.values.union}
                 onChange={formik.handleChange}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
+                error={formik.touched.union && Boolean(formik.errors.union)}
+                helperText={formik.touched.union && formik.errors.union}
               />
               <EmailField
                 value={formik.values.email}

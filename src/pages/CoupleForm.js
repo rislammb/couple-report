@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Typography,
   Button,
   TextField,
-  LinearProgress,
+  CircularProgress,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 import YearList from '../components/YearList';
 import UnitList from '../components/UnitList';
@@ -33,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'baseline',
   },
+  progressContainer: {
+    width: '90%',
+    maxWidth: 350,
+    textAlign: 'center',
+    margin: '65px auto',
+  },
   progress: {
     width: '125px',
     display: 'inline-block',
@@ -56,6 +64,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 15,
     textAlign: 'center',
   },
+  link: {
+    textDecoration: 'none',
+    color:
+      theme.palette.type === 'light'
+        ? theme.palette.primary.dark
+        : theme.palette.primary.light,
+  },
+  alert: {
+    position: 'fixed',
+    left: 3,
+    top: 3,
+  },
 }));
 
 const CoupleForm = (props) => {
@@ -72,6 +92,7 @@ const CoupleForm = (props) => {
   const [fwaName, setFwaName] = useState('');
   const [ageRange, setAgeRange] = useState('<২০');
   const [submitingData, setSubmitingData] = useState(false);
+  const [saveCompleted, setSaveCompleted] = useState(false);
 
   const handleClear = () => {
     setRowOne({ ...rowOneValue });
@@ -89,6 +110,7 @@ const CoupleForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSaveCompleted(false);
     setSubmitingData(true);
 
     if (unionName === user.union) {
@@ -118,16 +140,19 @@ const CoupleForm = (props) => {
           }
         })
         .then(() => {
+          setSaveCompleted(true);
           setSubmitingData(false);
-          handleClear();
+          setTimeout(() => {
+            setSaveCompleted(false);
+          }, 2500);
         })
         .catch((err) => {
           console.log('Data saved Faild!', err);
           setSubmitingData(false);
         });
     } else {
-      alert('আপনি এই ফরম পূরণের জন্য অনুমোদিত নন!');
       setSubmitingData(false);
+      alert('আপনি এই ফরম পূরণের জন্য অনুমোদিত নন!');
     }
   };
 
@@ -152,81 +177,95 @@ const CoupleForm = (props) => {
           handleClear();
         }
       });
-  }, [riportingYear, user, unit, ageRange]);
+  }, [unionName, riportingYear, unit, ageRange]);
 
-  return (
-    <div className={classes.root}>
-      <div className={classes.topContainer}>
-        <Typography variant='h5' className={classes.header}>
-          সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-২০২১
+  if (authLoading)
+    return (
+      <div className={classes.progressContainer}>
+        <CircularProgress />
+      </div>
+    );
+  if (user)
+    return (
+      <div className={classes.root}>
+        {saveCompleted && (
+          <Alert className={classes.alert} severity='success'>
+            আপনার তথ্য সংরক্ষণ হয়েছে
+          </Alert>
+        )}
+        <div className={classes.topContainer}>
+          <Typography variant='h5' className={classes.header}>
+            সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-২০২১
+          </Typography>
+        </div>
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <div className={classes.tableContainer}>
+            <div className={classes.info}>
+              <Typography component='div'>ইউনিয়নঃ {unionName}</Typography>
+              <YearList
+                riportingYear={riportingYear}
+                setRiportingYear={setRiportingYear}
+              />
+              <UnitList unit={unit} setUnit={handleUnitChange} />
+              <TextField
+                value={fwaName}
+                onChange={(e) => setFwaName(e.target.value)}
+                label='এফডব্লিউএ এর নাম'
+                placeholder='নাম লিখুন ...'
+              />
+              <AgeRange ageRange={ageRange} setAgeRange={setAgeRange} />
+            </div>
+            <FormTable
+              ageRange={ageRange}
+              rowOne={rowOne}
+              setRowOne={setRowOne}
+              rowTwo={rowTwo}
+              setRowTwo={setRowTwo}
+              rowThree={rowThree}
+              setRowThree={setRowThree}
+              rowFour={rowFour}
+              setRowFour={setRowFour}
+            />
+          </div>
+          <div className={classes.formActions}>
+            <Button
+              color='secondary'
+              style={{ marginRight: 10 }}
+              variant='contained'
+              onClick={handleClear}
+            >
+              মুছে ফেলুন
+            </Button>
+            <Button
+              disabled={
+                unionName !== user?.union ||
+                !riportingYear ||
+                !unit ||
+                !fwaName ||
+                !ageRange ||
+                submitingData
+              }
+              color='primary'
+              variant='contained'
+              type='submit'
+            >
+              সংরক্ষণ করুন
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  else
+    return (
+      <div className={classes.progressContainer}>
+        <Typography variant='h6'>
+          দম্পতি ফরম পেতে{' '}
+          <Link className={classes.link} to='/login'>
+            লগইন করুন
+          </Link>
         </Typography>
       </div>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <div className={classes.tableContainer}>
-          <div className={classes.info}>
-            <Typography component='div'>
-              ইউনিয়নঃ{' '}
-              {authLoading ? (
-                <LinearProgress className={classes.progress} />
-              ) : user?.union ? (
-                user.union
-              ) : (
-                ''
-              )}
-            </Typography>
-            <YearList
-              riportingYear={riportingYear}
-              setRiportingYear={setRiportingYear}
-            />
-            <UnitList unit={unit} setUnit={handleUnitChange} />
-            <TextField
-              value={fwaName}
-              onChange={(e) => setFwaName(e.target.value)}
-              label='এফডব্লিউএ এর নাম'
-              placeholder='নাম লিখুন ...'
-            />
-            <AgeRange ageRange={ageRange} setAgeRange={setAgeRange} />
-          </div>
-          <FormTable
-            ageRange={ageRange}
-            rowOne={rowOne}
-            setRowOne={setRowOne}
-            rowTwo={rowTwo}
-            setRowTwo={setRowTwo}
-            rowThree={rowThree}
-            setRowThree={setRowThree}
-            rowFour={rowFour}
-            setRowFour={setRowFour}
-          />
-        </div>
-        <div className={classes.formActions}>
-          <Button
-            color='secondary'
-            style={{ marginRight: 10 }}
-            variant='contained'
-            onClick={handleClear}
-          >
-            মুছে ফেলুন
-          </Button>
-          <Button
-            disabled={
-              unionName !== user?.union ||
-              !riportingYear ||
-              !unit ||
-              !fwaName ||
-              !ageRange ||
-              submitingData
-            }
-            color='primary'
-            variant='contained'
-            type='submit'
-          >
-            সংরক্ষণ করুন
-          </Button>
-        </div>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default CoupleForm;

@@ -61,13 +61,13 @@ const useStyles = makeStyles((theme) => ({
 
 const validationSchema = yup.object({
   email: yup
-    .string('Enter your email')
-    .email('Enter a valid email')
-    .required('Email is required'),
+    .string('আপনার ইমেইল দিন')
+    .email('সঠিক ইমেইল দিন')
+    .required('ইমেইল দিতেই হবে'),
   password: yup
-    .string('Enter your password')
-    .min(7, 'Password should be of minimum 7 characters length')
-    .required('Password is required'),
+    .string('আপনার পাসওয়ার্ড দিন')
+    .min(7, 'পাসওয়ার্ড কমপক্ষে ৭ অক্ষরের হতে হবে')
+    .required('পাসওয়ার্ড দিতেই হবে'),
 });
 
 const Login = () => {

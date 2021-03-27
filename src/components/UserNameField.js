@@ -8,7 +8,7 @@ const UserNameField = (props) => {
       id='name'
       name='name'
       label='নাম'
-      placeholder='Abdur Rahman'
+      placeholder='আব্দুর রহমান'
       {...props}
     />
   );

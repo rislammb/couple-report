@@ -56,28 +56,44 @@ const RowFive = (props) => {
   };
 
   useEffect(() => {
-    setTotalRow({
-      a: getCellATotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      b: getCellBTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      c: getCellCTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      d: getCellDTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      e: getCellETotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      f: getCellFTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      g: getCellGTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      h: getCellHTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      i: getCellITotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      j: getCellJTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      k: getCellKTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      l: getCellLTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      m: getCellMTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      n: getCellNTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      o: getTotalOfTotal(),
-      p: getCellPTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      q: getCellQTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      r: getCellRTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
-      s: getCellSTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+    setTotalRow((prev) => {
+      return {
+        ...prev,
+        a: getCellATotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        b: getCellBTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        c: getCellCTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        d: getCellDTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        e: getCellETotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        f: getCellFTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        g: getCellGTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        h: getCellHTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        i: getCellITotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        j: getCellJTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        k: getCellKTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        l: getCellLTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        m: getCellMTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        n: getCellNTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        p: getCellPTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        q: getCellQTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        r: getCellRTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+        s: getCellSTotal(zeroRange, twentyRange, thirtyRange, fortyRange),
+      };
     });
   }, [zeroRange, twentyRange, thirtyRange, fortyRange]);
+
+  useEffect(() => {
+    setTotalRow((prev) => {
+      return {
+        ...prev,
+        o: getTotalOfTotal(),
+      };
+    });
+  }, [
+    storeZeroRowTotal,
+    storeTwentyRowTotal,
+    storeThirtyRowTotal,
+    storeFortyRowTotal,
+  ]);
 
   return (
     <tr className='rowFive'>

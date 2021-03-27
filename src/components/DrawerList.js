@@ -74,21 +74,24 @@ const DrawerList = ({ closeDrawer }) => {
             </ListItem>
           </NavLink>
         )}
-        <NavLink
-          to={user ? `/union/${user.union}/fullForm` : '/login'}
-          onClick={closeDrawer}
-          activeStyle={{
-            color: theme.palette.type === 'dark' ? 'lightgreen' : 'green',
-          }}
-          className={classes.link}
-        >
-          <ListItem button>
-            <ListItemIcon>
-              <Mail />
-            </ListItemIcon>
-            <ListItemText primary='সম্পূর্ণ ফরম' />
-          </ListItem>
-        </NavLink>
+        {user && (
+          <NavLink
+            exact
+            to={user ? `/union/${user.union}/fullForm` : '/login'}
+            onClick={closeDrawer}
+            activeStyle={{
+              color: theme.palette.type === 'dark' ? 'lightgreen' : 'green',
+            }}
+            className={classes.link}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <Mail />
+              </ListItemIcon>
+              <ListItemText primary='সম্পূর্ণ ফরম' />
+            </ListItem>
+          </NavLink>
+        )}
         <NavLink
           to='/contact'
           onClick={closeDrawer}
