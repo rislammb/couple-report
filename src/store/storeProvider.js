@@ -25,9 +25,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
-db.enablePersistence().catch((err) => {
-  console.log('Persistence Faild', err);
-});
+// db.enablePersistence().catch((err) => {
+//   console.log('Persistence Faild', err);
+// });
 
 const StoreProvider = () => {
   const [darkMode, setDarkMode] = useState(false);

@@ -6,7 +6,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
 } from '@material-ui/core';
 import YearList from './YearList';
 
@@ -20,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     '@media print': {
       display: 'none',
     },
+  },
+  formControl: {
+    minWidth: 75,
   },
 }));
 
@@ -42,6 +44,7 @@ const LoadRiportForm = (props) => {
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
         >
+          <MenuItem value=''>--</MenuItem>
           <MenuItem value='১ক'>১/ক</MenuItem>
           <MenuItem value='১খ'>১/খ</MenuItem>
           <MenuItem value='১গ'>১/গ</MenuItem>

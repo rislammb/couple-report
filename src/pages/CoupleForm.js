@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
   alert: {
     position: 'fixed',
+    maxWidth: '90%',
     left: 7,
     top: 7,
   },
