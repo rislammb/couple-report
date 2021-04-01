@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, Typography, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -11,6 +11,11 @@ import PrintRowThree from './PrintRowThree';
 import PrintRowFour from './PrintRowFour';
 import PrintRowFive from './PrintRowFive';
 
+import UnionZeroRange from './unionTable/UnionZeroRange';
+import UnionTwentyRange from './unionTable/UnionTwentyRange';
+import UnionThirtyRange from './unionTable/UnionThirtyRange';
+import UnionFortyRange from './unionTable/UnionFortyRange';
+
 import RowOne from './totalRows/RowOne';
 import RowTwo from './totalRows/RowTwo';
 import RowThree from './totalRows/RowThree';
@@ -18,6 +23,8 @@ import RowFour from './totalRows/RowFour';
 import TotalRowFive from './totalRows/RowFive';
 
 import { db } from '../store/storeProvider';
+
+import StoreContext from '../store/storeContext';
 
 import { rowOneValue, rowTwoValue, rowThreeValue, rowFourValue } from '../data';
 
@@ -104,6 +111,12 @@ const ageRangeValue = {
 const PrintTable = (props) => {
   const classes = useStyles();
   const { user, riportingYear, unionName, unit } = props;
+  const {
+    storeZeroRowTotal,
+    storeTwentyRowTotal,
+    storeThirtyRowTotal,
+    storeFortyRowTotal,
+  } = useContext(StoreContext);
   const [dataNull, setDataNull] = useState(false);
   const [stableConnection, setStableConnection] = useState(true);
 
@@ -113,8 +126,79 @@ const PrintTable = (props) => {
   const [thirtyRange, setThirtyRange] = useState({ ...ageRangeValue });
   const [fortyRange, setFortyRange] = useState({ ...ageRangeValue });
 
+  const [unionZeroRange, setUnionZeroRange] = useState([]);
+  const [unionTwentyRange, setUnionTwentyRange] = useState([]);
+  const [unionThirtyRange, setUnionThirtyRange] = useState([]);
+  const [unionFortyRange, setUnionFortyRange] = useState([]);
+
   const handleDataSubmit = () => {
-    alert(`${user.name}, সাবমিট বাটনের কাজ চলছে। অপেক্ষা করুন`);
+    const newZeroRange = {
+      ...zeroRange,
+      rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
+      rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
+      rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
+      rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
+    };
+    const newTwentyRange = {
+      ...twentyRange,
+      rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
+      rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
+      rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
+      rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
+    };
+    const newThirtyRange = {
+      ...thirtyRange,
+      rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
+      rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
+      rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
+      rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
+    };
+    const newFortyRange = {
+      ...fortyRange,
+      rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
+      rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
+      rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
+      rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
+    };
+    const dataToSubmit = {
+      riportingYear,
+      unionName,
+      unit,
+      fwaName,
+      zeroRange: newZeroRange,
+      twentyRange: newTwentyRange,
+      thirtyRange: newThirtyRange,
+      fortyRange: newFortyRange,
+    };
+
+    if (unionName === user.union) {
+      return db
+        .collection('couple-riport-2')
+        .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            return db
+              .collection('couple-riport-2')
+              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+              .update({
+                [unit]: dataToSubmit,
+              })
+              .catch((err) => console.log('riport submitted err', err));
+          } else {
+            console.log('nai');
+            return db
+              .collection('couple-riport-2')
+              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+              .set({
+                [unit]: dataToSubmit,
+              })
+              .catch((err) => console.log('riport submitted err', err));
+          }
+        });
+    } else {
+      alert('আপনি এই রিপোর্ট সাবমিটের জন্য অনুমোদিত নন!');
+    }
   };
 
   useEffect(() => {
@@ -124,41 +208,83 @@ const PrintTable = (props) => {
     setTwentyRange({ ...ageRangeValue });
     setThirtyRange({ ...ageRangeValue });
     setFortyRange({ ...ageRangeValue });
-    db.collection('couple-riport-1')
-      .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
-      .get()
-      .then((doc) => doc.data())
-      .then((data) => {
-        if (data) {
-          if (data['<২০']) setZeroRange(data['<২০']);
-          else setZeroRange({ ...ageRangeValue });
-          if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
-          else setTwentyRange({ ...ageRangeValue });
-          if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
-          else setThirtyRange({ ...ageRangeValue });
-          if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
-          else setFortyRange({ ...ageRangeValue });
-          if (data.fwaName) setFwaName(data.fwaName);
-          else setFwaName('');
-        } else {
-          setDataNull(true);
-          setZeroRange({ ...ageRangeValue });
-          setTwentyRange({ ...ageRangeValue });
-          setThirtyRange({ ...ageRangeValue });
-          setFortyRange({ ...ageRangeValue });
-          setTimeout(() => {
-            setDataNull(false);
-          }, 3700);
-        }
-      })
-      .catch((err) => {
-        if (err.code === 'unavailable') {
-          setStableConnection(false);
-          setTimeout(() => {
-            setStableConnection(true);
-          }, 3700);
-        }
-      });
+    if (unit) {
+      db.collection('couple-riport-1')
+        .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
+        .get()
+        .then((doc) => doc.data())
+        .then((data) => {
+          if (data) {
+            if (data['<২০']) setZeroRange(data['<২০']);
+            else setZeroRange({ ...ageRangeValue });
+            if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+            else setTwentyRange({ ...ageRangeValue });
+            if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+            else setThirtyRange({ ...ageRangeValue });
+            if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+            else setFortyRange({ ...ageRangeValue });
+            if (data.fwaName) setFwaName(data.fwaName);
+            else setFwaName('');
+          } else {
+            setDataNull(true);
+            setZeroRange({ ...ageRangeValue });
+            setTwentyRange({ ...ageRangeValue });
+            setThirtyRange({ ...ageRangeValue });
+            setFortyRange({ ...ageRangeValue });
+            setTimeout(() => {
+              setDataNull(false);
+            }, 3700);
+          }
+        })
+        .catch((err) => {
+          if (err.code === 'unavailable') {
+            setStableConnection(false);
+            setTimeout(() => {
+              setStableConnection(true);
+            }, 3700);
+          }
+        });
+    } else {
+      db.collection('couple-riport-2')
+        .doc(`rajshahi.bagmara.${riportingYear}.${unionName}`)
+        .get()
+        .then((doc) => doc.data())
+        .then((data) => {
+          if (data) {
+            let newZeroRange = [];
+            let newTwentyRange = [];
+            let newThirtyRange = [];
+            let newFortyRange = [];
+            Object.entries(data).map((item) => {
+              newZeroRange.push({ ...item[1].zeroRange });
+              newTwentyRange.push({ ...item[1].twentyRange });
+              newThirtyRange.push({ ...item[1].thirtyRange });
+              newFortyRange.push({ ...item[1].fortyRange });
+            });
+            setUnionZeroRange(newZeroRange);
+            setUnionTwentyRange(newTwentyRange);
+            setUnionThirtyRange(newThirtyRange);
+            setUnionFortyRange(newFortyRange);
+          } else {
+            setDataNull(true);
+            setZeroRange({ ...ageRangeValue });
+            setTwentyRange({ ...ageRangeValue });
+            setThirtyRange({ ...ageRangeValue });
+            setFortyRange({ ...ageRangeValue });
+            setTimeout(() => {
+              setDataNull(false);
+            }, 3700);
+          }
+        })
+        .catch((err) => {
+          if (err.code === 'unavailable') {
+            setStableConnection(false);
+            setTimeout(() => {
+              setStableConnection(true);
+            }, 3700);
+          }
+        });
+    }
   }, [riportingYear, unionName, unit]);
 
   useEffect(() => {
@@ -225,104 +351,119 @@ const PrintTable = (props) => {
 
               <Table className={classes.table}>
                 <TableHead />
-                <TableBody>
-                  <PrintRowOne ageRange='<২০' rowOne={zeroRange.rowOne} />
-                  <PrintRowTwo ageRange='<২০' rowTwo={zeroRange.rowTwo} />
-                  <PrintRowThree ageRange='<২০' rowThree={zeroRange.rowThree} />
-                  <PrintRowFour ageRange='<২০' rowFour={zeroRange.rowFour} />
-                  <PrintRowFive
-                    ageRange='<২০'
-                    rowOne={zeroRange.rowOne}
-                    rowTwo={zeroRange.rowTwo}
-                    rowThree={zeroRange.rowThree}
-                    rowFour={zeroRange.rowFour}
-                  />
+                {unit ? (
+                  <TableBody>
+                    <PrintRowOne ageRange='<২০' rowOne={zeroRange.rowOne} />
+                    <PrintRowTwo ageRange='<২০' rowTwo={zeroRange.rowTwo} />
+                    <PrintRowThree
+                      ageRange='<২০'
+                      rowThree={zeroRange.rowThree}
+                    />
+                    <PrintRowFour ageRange='<২০' rowFour={zeroRange.rowFour} />
+                    <PrintRowFive
+                      ageRange='<২০'
+                      rowOne={zeroRange.rowOne}
+                      rowTwo={zeroRange.rowTwo}
+                      rowThree={zeroRange.rowThree}
+                      rowFour={zeroRange.rowFour}
+                    />
 
-                  <PrintRowOne ageRange='২০-২৯' rowOne={twentyRange.rowOne} />
-                  <PrintRowTwo ageRange='২০-২৯' rowTwo={twentyRange.rowTwo} />
-                  <PrintRowThree
-                    ageRange='২০-২৯'
-                    rowThree={twentyRange.rowThree}
-                  />
-                  <PrintRowFour
-                    ageRange='২০-২৯'
-                    rowFour={twentyRange.rowFour}
-                  />
-                  <PrintRowFive
-                    ageRange='২০-২৯'
-                    rowOne={twentyRange.rowOne}
-                    rowTwo={twentyRange.rowTwo}
-                    rowThree={twentyRange.rowThree}
-                    rowFour={twentyRange.rowFour}
-                  />
+                    <PrintRowOne ageRange='২০-২৯' rowOne={twentyRange.rowOne} />
+                    <PrintRowTwo ageRange='২০-২৯' rowTwo={twentyRange.rowTwo} />
+                    <PrintRowThree
+                      ageRange='২০-২৯'
+                      rowThree={twentyRange.rowThree}
+                    />
+                    <PrintRowFour
+                      ageRange='২০-২৯'
+                      rowFour={twentyRange.rowFour}
+                    />
+                    <PrintRowFive
+                      ageRange='২০-২৯'
+                      rowOne={twentyRange.rowOne}
+                      rowTwo={twentyRange.rowTwo}
+                      rowThree={twentyRange.rowThree}
+                      rowFour={twentyRange.rowFour}
+                    />
 
-                  <PrintRowOne ageRange='৩০-৩৯' rowOne={thirtyRange.rowOne} />
-                  <PrintRowTwo ageRange='৩০-৩৯' rowTwo={thirtyRange.rowTwo} />
-                  <PrintRowThree
-                    ageRange='৩০-৩৯'
-                    rowThree={thirtyRange.rowThree}
-                  />
-                  <PrintRowFour
-                    ageRange='৩০-৩৯'
-                    rowFour={thirtyRange.rowFour}
-                  />
-                  <PrintRowFive
-                    ageRange='৩০-৩৯'
-                    rowOne={thirtyRange.rowOne}
-                    rowTwo={thirtyRange.rowTwo}
-                    rowThree={thirtyRange.rowThree}
-                    rowFour={thirtyRange.rowFour}
-                  />
+                    <PrintRowOne ageRange='৩০-৩৯' rowOne={thirtyRange.rowOne} />
+                    <PrintRowTwo ageRange='৩০-৩৯' rowTwo={thirtyRange.rowTwo} />
+                    <PrintRowThree
+                      ageRange='৩০-৩৯'
+                      rowThree={thirtyRange.rowThree}
+                    />
+                    <PrintRowFour
+                      ageRange='৩০-৩৯'
+                      rowFour={thirtyRange.rowFour}
+                    />
+                    <PrintRowFive
+                      ageRange='৩০-৩৯'
+                      rowOne={thirtyRange.rowOne}
+                      rowTwo={thirtyRange.rowTwo}
+                      rowThree={thirtyRange.rowThree}
+                      rowFour={thirtyRange.rowFour}
+                    />
 
-                  <PrintRowOne ageRange='৪০-৪৯' rowOne={fortyRange.rowOne} />
-                  <PrintRowTwo ageRange='৪০-৪৯' rowTwo={fortyRange.rowTwo} />
-                  <PrintRowThree
-                    ageRange='৪০-৪৯'
-                    rowThree={fortyRange.rowThree}
-                  />
-                  <PrintRowFour ageRange='৪০-৪৯' rowFour={fortyRange.rowFour} />
-                  <PrintRowFive
-                    ageRange='৪০-৪৯'
-                    rowOne={fortyRange.rowOne}
-                    rowTwo={fortyRange.rowTwo}
-                    rowThree={fortyRange.rowThree}
-                    rowFour={fortyRange.rowFour}
-                  />
+                    <PrintRowOne ageRange='৪০-৪৯' rowOne={fortyRange.rowOne} />
+                    <PrintRowTwo ageRange='৪০-৪৯' rowTwo={fortyRange.rowTwo} />
+                    <PrintRowThree
+                      ageRange='৪০-৪৯'
+                      rowThree={fortyRange.rowThree}
+                    />
+                    <PrintRowFour
+                      ageRange='৪০-৪৯'
+                      rowFour={fortyRange.rowFour}
+                    />
+                    <PrintRowFive
+                      ageRange='৪০-৪৯'
+                      rowOne={fortyRange.rowOne}
+                      rowTwo={fortyRange.rowTwo}
+                      rowThree={fortyRange.rowThree}
+                      rowFour={fortyRange.rowFour}
+                    />
 
-                  <RowOne
-                    ageRange='সর্বমোট'
-                    zeroRowOne={zeroRange.rowOne}
-                    twentyRowOne={twentyRange.rowOne}
-                    thirtyRowOne={thirtyRange.rowOne}
-                    fortyRowOne={fortyRange.rowOne}
-                  />
-                  <RowTwo
-                    zeroRowTwo={zeroRange.rowTwo}
-                    twentyRowTwo={twentyRange.rowTwo}
-                    thirtyRowTwo={thirtyRange.rowTwo}
-                    fortyRowTwo={fortyRange.rowTwo}
-                  />
+                    <RowOne
+                      ageRange='সর্বমোট'
+                      zeroRowOne={zeroRange.rowOne}
+                      twentyRowOne={twentyRange.rowOne}
+                      thirtyRowOne={thirtyRange.rowOne}
+                      fortyRowOne={fortyRange.rowOne}
+                    />
+                    <RowTwo
+                      zeroRowTwo={zeroRange.rowTwo}
+                      twentyRowTwo={twentyRange.rowTwo}
+                      thirtyRowTwo={thirtyRange.rowTwo}
+                      fortyRowTwo={fortyRange.rowTwo}
+                    />
 
-                  <RowThree
-                    zeroRowThree={zeroRange.rowThree}
-                    twentyRowThree={twentyRange.rowThree}
-                    thirtyRowThree={thirtyRange.rowThree}
-                    fortyRowThree={fortyRange.rowThree}
-                  />
+                    <RowThree
+                      zeroRowThree={zeroRange.rowThree}
+                      twentyRowThree={twentyRange.rowThree}
+                      thirtyRowThree={thirtyRange.rowThree}
+                      fortyRowThree={fortyRange.rowThree}
+                    />
 
-                  <RowFour
-                    zeroRowFour={zeroRange.rowFour}
-                    twentyRowFour={twentyRange.rowFour}
-                    thirtyRowFour={thirtyRange.rowFour}
-                    fortyRowFour={fortyRange.rowFour}
-                  />
-                  <TotalRowFive
-                    zeroRange={zeroRange}
-                    twentyRange={twentyRange}
-                    thirtyRange={thirtyRange}
-                    fortyRange={fortyRange}
-                  />
-                </TableBody>
+                    <RowFour
+                      zeroRowFour={zeroRange.rowFour}
+                      twentyRowFour={twentyRange.rowFour}
+                      thirtyRowFour={thirtyRange.rowFour}
+                      fortyRowFour={fortyRange.rowFour}
+                    />
+                    <TotalRowFive
+                      zeroRange={zeroRange}
+                      twentyRange={twentyRange}
+                      thirtyRange={thirtyRange}
+                      fortyRange={fortyRange}
+                    />
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    <UnionZeroRange unionZeroRange={unionZeroRange} />
+                    <UnionTwentyRange unionTwentyRange={unionTwentyRange} />
+                    {/* <UnionThirtyRange unionThirtyRange={unionThirtyRange} />
+                    <UnionFortyRange unionFortyRange={unionFortyRange} /> */}
+                  </TableBody>
+                )}
               </Table>
               <div className={classes.footerContainer}>
                 <br />
@@ -360,14 +501,14 @@ const PrintTable = (props) => {
           variant='contained'
           onClick={handleDataSubmit}
         >
-          সাবমিট করুন
+          ইউনিয়নে সাবমিট
         </Button>
         <Button
           color='primary'
           variant='contained'
           onClick={() => window.print()}
         >
-          প্রিন্ট করুন
+          প্রিন্ট
         </Button>
       </div>
     </div>

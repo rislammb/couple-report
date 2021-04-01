@@ -89,6 +89,14 @@ export const getTotal = (...props) => {
   return replaceToBangla(totalValue.toString());
 };
 
+export const getTotalFromArrey = (props) => {
+  let totalValue = 0;
+  props.map((item) => {
+    totalValue += +replaceToEnglish(item);
+  });
+  return replaceToBangla(totalValue.toString());
+};
+
 export const getYear = () =>
   replaceToBangla(new Date().getFullYear().toString());
 

@@ -35,7 +35,7 @@ const PrintPage = (props) => {
   const { user, authLoading } = useContext(StoreContext);
   const classes = useStyles();
   const [riportingYear, setRiportingYear] = useState(getYear());
-  const [unit, setUnit] = useState('১ক');
+  const [unit, setUnit] = useState('');
 
   if (authLoading)
     return (
