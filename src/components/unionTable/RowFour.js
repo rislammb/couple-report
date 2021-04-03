@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { getTotalFromArrey } from '../../functions';
+import { getTotalFromArray } from '../../functions';
 
 const RowFour = ({ range }) => {
   const [a4, setA4] = useState('০');
@@ -24,25 +24,25 @@ const RowFour = ({ range }) => {
   const [s4, setS4] = useState('০');
 
   useEffect(() => {
-    setA4(getTotalFromArrey(range.map((unit) => unit.rowFour.a4)));
-    setB4(getTotalFromArrey(range.map((unit) => unit.rowFour.b4)));
-    setC4(getTotalFromArrey(range.map((unit) => unit.rowFour.c4)));
-    setD4(getTotalFromArrey(range.map((unit) => unit.rowFour.d4)));
-    setE4(getTotalFromArrey(range.map((unit) => unit.rowFour.e4)));
-    setF4(getTotalFromArrey(range.map((unit) => unit.rowFour.f4)));
-    setG4(getTotalFromArrey(range.map((unit) => unit.rowFour.g4)));
-    setH4(getTotalFromArrey(range.map((unit) => unit.rowFour.h4)));
-    setI4(getTotalFromArrey(range.map((unit) => unit.rowFour.i4)));
-    setJ4(getTotalFromArrey(range.map((unit) => unit.rowFour.j4)));
-    setK4(getTotalFromArrey(range.map((unit) => unit.rowFour.k4)));
-    setL4(getTotalFromArrey(range.map((unit) => unit.rowFour.l4)));
-    setM4(getTotalFromArrey(range.map((unit) => unit.rowFour.m4)));
-    setN4(getTotalFromArrey(range.map((unit) => unit.rowFour.n4)));
-    setO4(getTotalFromArrey(range.map((unit) => unit.rowFour.o4)));
-    setP4(getTotalFromArrey(range.map((unit) => unit.rowFour.p4)));
-    setQ4(getTotalFromArrey(range.map((unit) => unit.rowFour.q4)));
-    setR4(getTotalFromArrey(range.map((unit) => unit.rowFour.r4)));
-    setS4(getTotalFromArrey(range.map((unit) => unit.rowFour.s4)));
+    setA4(getTotalFromArray(range.map((unit) => unit.rowFour.a4)));
+    setB4(getTotalFromArray(range.map((unit) => unit.rowFour.b4)));
+    setC4(getTotalFromArray(range.map((unit) => unit.rowFour.c4)));
+    setD4(getTotalFromArray(range.map((unit) => unit.rowFour.d4)));
+    setE4(getTotalFromArray(range.map((unit) => unit.rowFour.e4)));
+    setF4(getTotalFromArray(range.map((unit) => unit.rowFour.f4)));
+    setG4(getTotalFromArray(range.map((unit) => unit.rowFour.g4)));
+    setH4(getTotalFromArray(range.map((unit) => unit.rowFour.h4)));
+    setI4(getTotalFromArray(range.map((unit) => unit.rowFour.i4)));
+    setJ4(getTotalFromArray(range.map((unit) => unit.rowFour.j4)));
+    setK4(getTotalFromArray(range.map((unit) => unit.rowFour.k4)));
+    setL4(getTotalFromArray(range.map((unit) => unit.rowFour.l4)));
+    setM4(getTotalFromArray(range.map((unit) => unit.rowFour.m4)));
+    setN4(getTotalFromArray(range.map((unit) => unit.rowFour.n4)));
+    setO4(getTotalFromArray(range.map((unit) => unit.rowFour.o4)));
+    setP4(getTotalFromArray(range.map((unit) => unit.rowFour.p4)));
+    setQ4(getTotalFromArray(range.map((unit) => unit.rowFour.q4)));
+    setR4(getTotalFromArray(range.map((unit) => unit.rowFour.r4)));
+    setS4(getTotalFromArray(range.map((unit) => unit.rowFour.s4)));
   }, [range]);
 
   return (

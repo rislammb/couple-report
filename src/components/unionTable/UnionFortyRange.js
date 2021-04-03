@@ -4,15 +4,16 @@ import RowOne from './RowOne';
 import RowTwo from './RowTwo';
 import RowThree from './RowThree';
 import RowFour from './RowFour';
+import RowFive from './RowFive';
 
-const UnionFortyRange = ({ unionZeroRange }) => {
+const UnionFortyRange = ({ unionFortyRange }) => {
   return (
     <>
-      <RowOne ageRange='<২০' range={unionZeroRange} />
-      <RowTwo range={unionZeroRange} />
-      <RowThree range={unionZeroRange} />
-      <RowFour range={unionZeroRange} />
-      <RowFour range={unionZeroRange} />
+      <RowOne ageRange='৪০-৪৯' range={unionFortyRange} />
+      <RowTwo range={unionFortyRange} />
+      <RowThree range={unionFortyRange} />
+      <RowFour range={unionFortyRange} />
+      <RowFive range={unionFortyRange} />
     </>
   );
 };

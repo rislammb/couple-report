@@ -15,6 +15,7 @@ import UnionZeroRange from './unionTable/UnionZeroRange';
 import UnionTwentyRange from './unionTable/UnionTwentyRange';
 import UnionThirtyRange from './unionTable/UnionThirtyRange';
 import UnionFortyRange from './unionTable/UnionFortyRange';
+import UnionTotalRange from './unionTable/UnionTotalRange';
 
 import RowOne from './totalRows/RowOne';
 import RowTwo from './totalRows/RowTwo';
@@ -132,70 +133,74 @@ const PrintTable = (props) => {
   const [unionFortyRange, setUnionFortyRange] = useState([]);
 
   const handleDataSubmit = () => {
-    const newZeroRange = {
-      ...zeroRange,
-      rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
-      rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
-      rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
-      rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
-    };
-    const newTwentyRange = {
-      ...twentyRange,
-      rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
-      rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
-      rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
-      rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
-    };
-    const newThirtyRange = {
-      ...thirtyRange,
-      rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
-      rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
-      rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
-      rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
-    };
-    const newFortyRange = {
-      ...fortyRange,
-      rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
-      rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
-      rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
-      rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
-    };
-    const dataToSubmit = {
-      riportingYear,
-      unionName,
-      unit,
-      fwaName,
-      zeroRange: newZeroRange,
-      twentyRange: newTwentyRange,
-      thirtyRange: newThirtyRange,
-      fortyRange: newFortyRange,
-    };
-
     if (unionName === user.union) {
-      return db
-        .collection('couple-riport-2')
-        .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            return db
-              .collection('couple-riport-2')
-              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-              .update({
-                [unit]: dataToSubmit,
-              })
-              .catch((err) => console.log('riport submitted err', err));
-          } else {
-            console.log('nai');
-            return db
-              .collection('couple-riport-2')
-              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-              .set({
-                [unit]: dataToSubmit,
-              })
-              .catch((err) => console.log('riport submitted err', err));
-          }
-        });
+      if (unit) {
+        const newZeroRange = {
+          ...zeroRange,
+          rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
+          rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
+          rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
+          rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
+        };
+        const newTwentyRange = {
+          ...twentyRange,
+          rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
+          rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
+          rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
+          rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
+        };
+        const newThirtyRange = {
+          ...thirtyRange,
+          rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
+          rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
+          rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
+          rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
+        };
+        const newFortyRange = {
+          ...fortyRange,
+          rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
+          rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
+          rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
+          rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
+        };
+        const dataToSubmit = {
+          riportingYear,
+          unionName,
+          unit,
+          fwaName,
+          zeroRange: newZeroRange,
+          twentyRange: newTwentyRange,
+          thirtyRange: newThirtyRange,
+          fortyRange: newFortyRange,
+        };
+
+        return db
+          .collection('couple-riport-2')
+          .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              return db
+                .collection('couple-riport-2')
+                .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                .update({
+                  [unit]: dataToSubmit,
+                })
+                .catch((err) => console.log('riport submitted err', err));
+            } else {
+              console.log('nai');
+              return db
+                .collection('couple-riport-2')
+                .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                .set({
+                  [unit]: dataToSubmit,
+                })
+                .catch((err) => console.log('riport submitted err', err));
+            }
+          });
+      } else {
+        alert('উপজেলায় সাবমিটের কাজ এখনো শুরু করা হয়নি');
+      }
     } else {
       alert('আপনি এই রিপোর্ট সাবমিটের জন্য অনুমোদিত নন!');
     }
@@ -256,10 +261,10 @@ const PrintTable = (props) => {
             let newThirtyRange = [];
             let newFortyRange = [];
             Object.entries(data).map((item) => {
-              newZeroRange.push({ ...item[1].zeroRange });
-              newTwentyRange.push({ ...item[1].twentyRange });
-              newThirtyRange.push({ ...item[1].thirtyRange });
-              newFortyRange.push({ ...item[1].fortyRange });
+              newZeroRange.push(item[1].zeroRange);
+              newTwentyRange.push(item[1].twentyRange);
+              newThirtyRange.push(item[1].thirtyRange);
+              newFortyRange.push(item[1].fortyRange);
             });
             setUnionZeroRange(newZeroRange);
             setUnionTwentyRange(newTwentyRange);
@@ -267,10 +272,10 @@ const PrintTable = (props) => {
             setUnionFortyRange(newFortyRange);
           } else {
             setDataNull(true);
-            setZeroRange({ ...ageRangeValue });
-            setTwentyRange({ ...ageRangeValue });
-            setThirtyRange({ ...ageRangeValue });
-            setFortyRange({ ...ageRangeValue });
+            setUnionZeroRange([]);
+            setUnionTwentyRange([]);
+            setUnionThirtyRange([]);
+            setUnionFortyRange([]);
             setTimeout(() => {
               setDataNull(false);
             }, 3700);
@@ -460,8 +465,14 @@ const PrintTable = (props) => {
                   <TableBody>
                     <UnionZeroRange unionZeroRange={unionZeroRange} />
                     <UnionTwentyRange unionTwentyRange={unionTwentyRange} />
-                    {/* <UnionThirtyRange unionThirtyRange={unionThirtyRange} />
-                    <UnionFortyRange unionFortyRange={unionFortyRange} /> */}
+                    <UnionThirtyRange unionThirtyRange={unionThirtyRange} />
+                    <UnionFortyRange unionFortyRange={unionFortyRange} />
+                    <UnionTotalRange
+                      unionZeroRange={unionZeroRange}
+                      unionTwentyRange={unionTwentyRange}
+                      unionThirtyRange={unionThirtyRange}
+                      unionFortyRange={unionFortyRange}
+                    />
                   </TableBody>
                 )}
               </Table>
@@ -501,7 +512,7 @@ const PrintTable = (props) => {
           variant='contained'
           onClick={handleDataSubmit}
         >
-          ইউনিয়নে সাবমিট
+          {unit ? 'ইউনিয়নে' : 'উপজেলায়'} সাবমিট
         </Button>
         <Button
           color='primary'

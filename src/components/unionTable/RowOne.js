@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { getTotalFromArrey } from '../../functions';
+import { getTotalFromArray } from '../../functions';
 
 const RowOne = ({ ageRange, range }) => {
   const [a1, setA1] = useState('০');
@@ -23,24 +23,25 @@ const RowOne = ({ ageRange, range }) => {
   const [s1, setS1] = useState('০');
 
   useEffect(() => {
-    setA1(getTotalFromArrey(range.map((unit) => unit.rowOne.a1)));
-    setB1(getTotalFromArrey(range.map((unit) => unit.rowOne.b1)));
-    setC1(getTotalFromArrey(range.map((unit) => unit.rowOne.c1)));
-    setD1(getTotalFromArrey(range.map((unit) => unit.rowOne.d1)));
-    setE1(getTotalFromArrey(range.map((unit) => unit.rowOne.e1)));
-    setF1(getTotalFromArrey(range.map((unit) => unit.rowOne.f1)));
-    setG1(getTotalFromArrey(range.map((unit) => unit.rowOne.g1)));
-    setH1(getTotalFromArrey(range.map((unit) => unit.rowOne.h1)));
-    setI1(getTotalFromArrey(range.map((unit) => unit.rowOne.i1)));
-    setJ1(getTotalFromArrey(range.map((unit) => unit.rowOne.j1)));
-    setK1(getTotalFromArrey(range.map((unit) => unit.rowOne.k1)));
-    setL1(getTotalFromArrey(range.map((unit) => unit.rowOne.l1)));
-    setM1(getTotalFromArrey(range.map((unit) => unit.rowOne.m1)));
-    setN1(getTotalFromArrey(range.map((unit) => unit.rowOne.n1)));
-    setO1(getTotalFromArrey(range.map((unit) => unit.rowOne.o1)));
-    setP1(getTotalFromArrey(range.map((unit) => unit.rowOne.p1)));
-    setQ1(getTotalFromArrey(range.map((unit) => unit.rowOne.q1)));
-    setS1(getTotalFromArrey(range.map((unit) => unit.rowOne.s1)));
+    setA1(getTotalFromArray(range.map((unit) => unit.rowOne.a1)));
+    setA1(getTotalFromArray(range.map((unit) => unit.rowOne.a1)));
+    setB1(getTotalFromArray(range.map((unit) => unit.rowOne.b1)));
+    setC1(getTotalFromArray(range.map((unit) => unit.rowOne.c1)));
+    setD1(getTotalFromArray(range.map((unit) => unit.rowOne.d1)));
+    setE1(getTotalFromArray(range.map((unit) => unit.rowOne.e1)));
+    setF1(getTotalFromArray(range.map((unit) => unit.rowOne.f1)));
+    setG1(getTotalFromArray(range.map((unit) => unit.rowOne.g1)));
+    setH1(getTotalFromArray(range.map((unit) => unit.rowOne.h1)));
+    setI1(getTotalFromArray(range.map((unit) => unit.rowOne.i1)));
+    setJ1(getTotalFromArray(range.map((unit) => unit.rowOne.j1)));
+    setK1(getTotalFromArray(range.map((unit) => unit.rowOne.k1)));
+    setL1(getTotalFromArray(range.map((unit) => unit.rowOne.l1)));
+    setM1(getTotalFromArray(range.map((unit) => unit.rowOne.m1)));
+    setN1(getTotalFromArray(range.map((unit) => unit.rowOne.n1)));
+    setO1(getTotalFromArray(range.map((unit) => unit.rowOne.o1)));
+    setP1(getTotalFromArray(range.map((unit) => unit.rowOne.p1)));
+    setQ1(getTotalFromArray(range.map((unit) => unit.rowOne.q1)));
+    setS1(getTotalFromArray(range.map((unit) => unit.rowOne.s1)));
   }, [range]);
 
   return (

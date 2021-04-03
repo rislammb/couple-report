@@ -4,6 +4,7 @@ import RowOne from './RowOne';
 import RowTwo from './RowTwo';
 import RowThree from './RowThree';
 import RowFour from './RowFour';
+import RowFive from './RowFive';
 
 const UnionZeroRange = ({ unionZeroRange }) => {
   return (
@@ -12,7 +13,7 @@ const UnionZeroRange = ({ unionZeroRange }) => {
       <RowTwo range={unionZeroRange} />
       <RowThree range={unionZeroRange} />
       <RowFour range={unionZeroRange} />
-      <RowFour range={unionZeroRange} />
+      <RowFive range={unionZeroRange} />
     </>
   );
 };

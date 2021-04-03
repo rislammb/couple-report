@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { getTotalFromArrey } from '../../functions';
+import { getTotalFromArray } from '../../functions';
 
 const RowThree = ({ range }) => {
   const [a3, setA3] = useState('০');
@@ -24,29 +24,29 @@ const RowThree = ({ range }) => {
   const [s3, setS3] = useState('০');
 
   useEffect(() => {
-    setA3(getTotalFromArrey(range.map((unit) => unit.rowThree.a3)));
-    setB3(getTotalFromArrey(range.map((unit) => unit.rowThree.b3)));
-    setC3(getTotalFromArrey(range.map((unit) => unit.rowThree.c3)));
-    setD3(getTotalFromArrey(range.map((unit) => unit.rowThree.d3)));
-    setE3(getTotalFromArrey(range.map((unit) => unit.rowThree.e3)));
-    setF3(getTotalFromArrey(range.map((unit) => unit.rowThree.f3)));
-    setG3(getTotalFromArrey(range.map((unit) => unit.rowThree.g3)));
-    setH3(getTotalFromArrey(range.map((unit) => unit.rowThree.h3)));
-    setI3(getTotalFromArrey(range.map((unit) => unit.rowThree.i3)));
-    setJ3(getTotalFromArrey(range.map((unit) => unit.rowThree.j3)));
-    setK3(getTotalFromArrey(range.map((unit) => unit.rowThree.k3)));
-    setL3(getTotalFromArrey(range.map((unit) => unit.rowThree.l3)));
-    setM3(getTotalFromArrey(range.map((unit) => unit.rowThree.m3)));
-    setN3(getTotalFromArrey(range.map((unit) => unit.rowThree.n3)));
-    setO3(getTotalFromArrey(range.map((unit) => unit.rowThree.o3)));
-    setP3(getTotalFromArrey(range.map((unit) => unit.rowThree.p3)));
-    setQ3(getTotalFromArrey(range.map((unit) => unit.rowThree.q3)));
-    setR3(getTotalFromArrey(range.map((unit) => unit.rowThree.r3)));
-    setS3(getTotalFromArrey(range.map((unit) => unit.rowThree.s3)));
+    setA3(getTotalFromArray(range.map((unit) => unit.rowThree.a3)));
+    setB3(getTotalFromArray(range.map((unit) => unit.rowThree.b3)));
+    setC3(getTotalFromArray(range.map((unit) => unit.rowThree.c3)));
+    setD3(getTotalFromArray(range.map((unit) => unit.rowThree.d3)));
+    setE3(getTotalFromArray(range.map((unit) => unit.rowThree.e3)));
+    setF3(getTotalFromArray(range.map((unit) => unit.rowThree.f3)));
+    setG3(getTotalFromArray(range.map((unit) => unit.rowThree.g3)));
+    setH3(getTotalFromArray(range.map((unit) => unit.rowThree.h3)));
+    setI3(getTotalFromArray(range.map((unit) => unit.rowThree.i3)));
+    setJ3(getTotalFromArray(range.map((unit) => unit.rowThree.j3)));
+    setK3(getTotalFromArray(range.map((unit) => unit.rowThree.k3)));
+    setL3(getTotalFromArray(range.map((unit) => unit.rowThree.l3)));
+    setM3(getTotalFromArray(range.map((unit) => unit.rowThree.m3)));
+    setN3(getTotalFromArray(range.map((unit) => unit.rowThree.n3)));
+    setO3(getTotalFromArray(range.map((unit) => unit.rowThree.o3)));
+    setP3(getTotalFromArray(range.map((unit) => unit.rowThree.p3)));
+    setQ3(getTotalFromArray(range.map((unit) => unit.rowThree.q3)));
+    setR3(getTotalFromArray(range.map((unit) => unit.rowThree.r3)));
+    setS3(getTotalFromArray(range.map((unit) => unit.rowThree.s3)));
   }, [range]);
 
   return (
-    <tr className='rowOne'>
+    <tr className='rowThree'>
       <td>২</td>
       <td>{a3}</td>
       <td>{b3}</td>
@@ -62,7 +62,7 @@ const RowThree = ({ range }) => {
       <td>{l3}</td>
       <td>{m3}</td>
       <td>{n3}</td>
-      <td className='oneTotal'>{o3}</td>
+      <td className='threeTotal'>{o3}</td>
       <td>{p3}</td>
       <td>{q3}</td>
       <td>{r3}</td>

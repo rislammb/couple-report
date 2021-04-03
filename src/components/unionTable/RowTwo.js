@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { getTotalFromArrey } from '../../functions';
+import { getTotalFromArray } from '../../functions';
 
 const RowTwo = ({ range }) => {
   const [a2, setA2] = useState('০');
@@ -24,25 +24,25 @@ const RowTwo = ({ range }) => {
   const [s2, setS2] = useState('০');
 
   useEffect(() => {
-    setA2(getTotalFromArrey(range.map((unit) => unit.rowTwo.a2)));
-    setB2(getTotalFromArrey(range.map((unit) => unit.rowTwo.b2)));
-    setC2(getTotalFromArrey(range.map((unit) => unit.rowTwo.c2)));
-    setD2(getTotalFromArrey(range.map((unit) => unit.rowTwo.d2)));
-    setE2(getTotalFromArrey(range.map((unit) => unit.rowTwo.e2)));
-    setF2(getTotalFromArrey(range.map((unit) => unit.rowTwo.f2)));
-    setG2(getTotalFromArrey(range.map((unit) => unit.rowTwo.g2)));
-    setH2(getTotalFromArrey(range.map((unit) => unit.rowTwo.h2)));
-    setI2(getTotalFromArrey(range.map((unit) => unit.rowTwo.i2)));
-    setJ2(getTotalFromArrey(range.map((unit) => unit.rowTwo.j2)));
-    setK2(getTotalFromArrey(range.map((unit) => unit.rowTwo.k2)));
-    setL2(getTotalFromArrey(range.map((unit) => unit.rowTwo.l2)));
-    setM2(getTotalFromArrey(range.map((unit) => unit.rowTwo.m2)));
-    setN2(getTotalFromArrey(range.map((unit) => unit.rowTwo.n2)));
-    setO2(getTotalFromArrey(range.map((unit) => unit.rowTwo.o2)));
-    setP2(getTotalFromArrey(range.map((unit) => unit.rowTwo.p2)));
-    setQ2(getTotalFromArrey(range.map((unit) => unit.rowTwo.q2)));
-    setR2(getTotalFromArrey(range.map((unit) => unit.rowTwo.r2)));
-    setS2(getTotalFromArrey(range.map((unit) => unit.rowTwo.s2)));
+    setA2(getTotalFromArray(range.map((unit) => unit.rowTwo.a2)));
+    setB2(getTotalFromArray(range.map((unit) => unit.rowTwo.b2)));
+    setC2(getTotalFromArray(range.map((unit) => unit.rowTwo.c2)));
+    setD2(getTotalFromArray(range.map((unit) => unit.rowTwo.d2)));
+    setE2(getTotalFromArray(range.map((unit) => unit.rowTwo.e2)));
+    setF2(getTotalFromArray(range.map((unit) => unit.rowTwo.f2)));
+    setG2(getTotalFromArray(range.map((unit) => unit.rowTwo.g2)));
+    setH2(getTotalFromArray(range.map((unit) => unit.rowTwo.h2)));
+    setI2(getTotalFromArray(range.map((unit) => unit.rowTwo.i2)));
+    setJ2(getTotalFromArray(range.map((unit) => unit.rowTwo.j2)));
+    setK2(getTotalFromArray(range.map((unit) => unit.rowTwo.k2)));
+    setL2(getTotalFromArray(range.map((unit) => unit.rowTwo.l2)));
+    setM2(getTotalFromArray(range.map((unit) => unit.rowTwo.m2)));
+    setN2(getTotalFromArray(range.map((unit) => unit.rowTwo.n2)));
+    setO2(getTotalFromArray(range.map((unit) => unit.rowTwo.o2)));
+    setP2(getTotalFromArray(range.map((unit) => unit.rowTwo.p2)));
+    setQ2(getTotalFromArray(range.map((unit) => unit.rowTwo.q2)));
+    setR2(getTotalFromArray(range.map((unit) => unit.rowTwo.r2)));
+    setS2(getTotalFromArray(range.map((unit) => unit.rowTwo.s2)));
   }, [range]);
 
   return (

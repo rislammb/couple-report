@@ -89,9 +89,9 @@ export const getTotal = (...props) => {
   return replaceToBangla(totalValue.toString());
 };
 
-export const getTotalFromArrey = (props) => {
+export const getTotalFromArray = (aray) => {
   let totalValue = 0;
-  props.map((item) => {
+  aray.map((item) => {
     totalValue += +replaceToEnglish(item);
   });
   return replaceToBangla(totalValue.toString());
