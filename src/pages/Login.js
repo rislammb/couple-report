@@ -91,7 +91,7 @@ const Login = () => {
 
   useEffect(() => {
     setUserError({});
-  }, []);
+  }, [setUserError]);
 
   if (authLoading)
     return (

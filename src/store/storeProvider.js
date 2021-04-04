@@ -10,7 +10,6 @@ import 'firebase/auth';
 
 import StoreContext from './storeContext';
 import App from '../App';
-import { rowOneValue } from '../data';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -24,10 +23,6 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
-
-// db.enablePersistence().catch((err) => {
-//   console.log('Persistence Faild', err);
-// });
 
 const StoreProvider = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -59,8 +54,6 @@ const StoreProvider = () => {
     t3: '০',
     t4: '০',
   });
-
-  const [storeTotalRowOne, setStoreTotalRowOne] = useState({ ...rowOneValue });
 
   const createUser = ({ name, email, password, union }) => {
     return firebase
@@ -185,7 +178,7 @@ const StoreProvider = () => {
         setAuthLoading(false);
       }
     });
-  }, [firebase.auth()]);
+  }, [firebase.auth().currentUser]);
 
   return (
     <StoreContext.Provider

@@ -86,7 +86,7 @@ const CreateAccount = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      union: '০১-গোবিন্দপাড়া',
+      union: '০১-গোবিন্দপাড়াsetUserError',
       email: '',
       password: '',
     },
@@ -100,7 +100,7 @@ const CreateAccount = () => {
 
   useEffect(() => {
     setUserError({});
-  }, []);
+  }, [setUserError]);
 
   if (authLoading)
     return (

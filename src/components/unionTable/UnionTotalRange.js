@@ -4,7 +4,7 @@ import TotalRowOne from './TotalRowOne';
 import TotalRowTwo from './TotalRowTwo';
 import TotalRowThree from './TotalRowThree';
 import TotalRowFour from './TotalRowFour';
-// import RowFive from './RowFive';
+import TotalRowFive from './TotalRowFive';
 
 const UnionTotalRange = ({
   unionZeroRange,
@@ -53,7 +53,12 @@ const UnionTotalRange = ({
       <TotalRowTwo rowTwoData={rowTwoData} />
       <TotalRowThree rowThreeData={rowThreeData} />
       <TotalRowFour rowFourData={rowFourData} />
-      {/* <RowFive range={unionZeroRange} /> */}
+      <TotalRowFive
+        rowOneData={rowOneData}
+        rowTwoData={rowTwoData}
+        rowThreeData={rowThreeData}
+        rowFourData={rowFourData}
+      />
     </>
   );
 };

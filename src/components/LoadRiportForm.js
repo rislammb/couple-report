@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   formControl: {
-    minWidth: 75,
+    minWidth: 71,
   },
 }));
 
