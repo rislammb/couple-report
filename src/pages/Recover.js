@@ -92,7 +92,7 @@ const Recover = () => {
   useEffect(() => {
     setUserError({});
     setIsSendEmail(false);
-  }, [setUserError, setIsSendEmail]);
+  }, []);
 
   if (authLoading)
     return (

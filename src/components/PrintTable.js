@@ -100,6 +100,12 @@ const useStyles = makeStyles({
       display: 'none',
     },
   },
+  alert: {
+    position: 'fixed',
+    maxWidth: '90%',
+    left: 7,
+    top: 7,
+  },
 });
 
 const ageRangeValue = {
@@ -131,73 +137,86 @@ const PrintTable = (props) => {
   const [unionTwentyRange, setUnionTwentyRange] = useState([]);
   const [unionThirtyRange, setUnionThirtyRange] = useState([]);
   const [unionFortyRange, setUnionFortyRange] = useState([]);
+  const [submitCompleted, setSubmitCompleted] = useState(false);
 
   const handleDataSubmit = () => {
+    setSubmitCompleted(false);
+
     if (unionName === user.union) {
       if (unit) {
-        const newZeroRange = {
-          ...zeroRange,
-          rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
-          rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
-          rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
-          rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
-        };
-        const newTwentyRange = {
-          ...twentyRange,
-          rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
-          rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
-          rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
-          rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
-        };
-        const newThirtyRange = {
-          ...thirtyRange,
-          rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
-          rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
-          rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
-          rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
-        };
-        const newFortyRange = {
-          ...fortyRange,
-          rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
-          rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
-          rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
-          rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
-        };
-        const dataToSubmit = {
-          riportingYear,
-          unionName,
-          unit,
-          fwaName,
-          zeroRange: newZeroRange,
-          twentyRange: newTwentyRange,
-          thirtyRange: newThirtyRange,
-          fortyRange: newFortyRange,
-        };
+        if (
+          window.confirm(`আপনি কি ${unit} ইউনিটের প্রতিবেদনটি সাবমিট করতে চান?`)
+        ) {
+          const newZeroRange = {
+            ...zeroRange,
+            rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
+            rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
+            rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
+            rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
+          };
+          const newTwentyRange = {
+            ...twentyRange,
+            rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
+            rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
+            rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
+            rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
+          };
+          const newThirtyRange = {
+            ...thirtyRange,
+            rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
+            rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
+            rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
+            rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
+          };
+          const newFortyRange = {
+            ...fortyRange,
+            rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
+            rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
+            rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
+            rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
+          };
+          const dataToSubmit = {
+            riportingYear,
+            unionName,
+            unit,
+            fwaName,
+            zeroRange: newZeroRange,
+            twentyRange: newTwentyRange,
+            thirtyRange: newThirtyRange,
+            fortyRange: newFortyRange,
+          };
 
-        return db
-          .collection('couple-riport-2')
-          .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              return db
-                .collection('couple-riport-2')
-                .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-                .update({
-                  [unit]: dataToSubmit,
-                })
-                .catch((err) => console.log('riport submitted err', err));
-            } else {
-              console.log('nai');
-              return db
-                .collection('couple-riport-2')
-                .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
-                .set({
-                  [unit]: dataToSubmit,
-                })
-                .catch((err) => console.log('riport submitted err', err));
-            }
-          });
+          return db
+            .collection('couple-riport-2')
+            .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                return db
+                  .collection('couple-riport-2')
+                  .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                  .update({
+                    [unit]: dataToSubmit,
+                  })
+                  .catch((err) => console.log('riport submitted err', err));
+              } else {
+                console.log('nai');
+                return db
+                  .collection('couple-riport-2')
+                  .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                  .set({
+                    [unit]: dataToSubmit,
+                  })
+                  .catch((err) => console.log('riport submitted err', err));
+              }
+            })
+            .then(() => {
+              setSubmitCompleted(true);
+              setTimeout(() => {
+                setSubmitCompleted(false);
+              }, 4700);
+            });
+        }
       } else {
         alert('উপজেলায় সাবমিটের কাজ এখনো শুরু করা হয়নি');
       }
@@ -286,7 +305,7 @@ const PrintTable = (props) => {
             setStableConnection(false);
             setTimeout(() => {
               setStableConnection(true);
-            }, 3700);
+            }, 4700);
           }
         });
     }
@@ -347,8 +366,10 @@ const PrintTable = (props) => {
                 </Alert>
               ) : dataNull ? (
                 <Alert className={classes.alert} severity='warning'>
-                  {unionName} ইউনিয়নের {unit && `${unit} ইউনিটের`} তথ্য খুঁজে
-                  পাওয়া যায়নি
+                  {unionName.includes('এনজিও')
+                    ? `${unionName} এর`
+                    : `${unionName} ইউনিয়নের`}{' '}
+                  {unit && `${unit} ইউনিটের`} তথ্য খুঁজে পাওয়া যায়নি
                 </Alert>
               ) : (
                 ''
@@ -483,7 +504,12 @@ const PrintTable = (props) => {
                 <br />
                 <div className={classes.footerTextContainer}>
                   <Typography className={classes.date}>তারিখঃ</Typography>
-                  {unit ? (
+                  {unionName.includes('এনজিও') ? (
+                    <div>
+                      <Typography>{unionName}</Typography>
+                      <Typography>বাগমারা, রাজশাহী।</Typography>
+                    </div>
+                  ) : unit ? (
                     <div>
                       {fwaName && <Typography>( {fwaName} )</Typography>}
                       <Typography>পরিবার কলাণ সহকারী</Typography>
@@ -522,6 +548,11 @@ const PrintTable = (props) => {
           প্রিন্ট
         </Button>
       </div>
+      {submitCompleted && (
+        <Alert className={classes.alert} severity='success'>
+          আপনার {unit} ইউনিটের প্রতিবেদনটি সাবমিট হয়েছে
+        </Alert>
+      )}
     </div>
   );
 };

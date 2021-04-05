@@ -83,6 +83,7 @@ const CoupleForm = (props) => {
   const { unionName } = props.match.params;
   const classes = useStyles();
   const { user, authLoading, setStoreZeroRowTotal } = useContext(StoreContext);
+
   const [rowOne, setRowOne] = useState({ ...rowOneValue });
   const [rowTwo, setRowTwo] = useState({ ...rowTwoValue });
   const [rowThree, setRowThree] = useState({ ...rowThreeValue });
@@ -145,7 +146,7 @@ const CoupleForm = (props) => {
           setSubmitingData(false);
           setTimeout(() => {
             setSaveCompleted(false);
-          }, 3700);
+          }, 4700);
         })
         .catch((err) => {
           console.log('Data saved Faild!', err);
@@ -180,93 +181,95 @@ const CoupleForm = (props) => {
       });
   }, [unionName, riportingYear, unit, ageRange]);
 
-  if (authLoading)
+  if (authLoading) {
     return (
       <div className={classes.progressContainer}>
         <CircularProgress />
       </div>
     );
-  if (user)
-    return (
-      <div className={classes.root}>
-        {saveCompleted && (
-          <Alert className={classes.alert} severity='success'>
-            আপনার তথ্য সংরক্ষণ হয়েছে
-          </Alert>
-        )}
-        <div className={classes.topContainer}>
-          <Typography variant='h5' className={classes.header}>
-            সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-{riportingYear}
+  } else {
+    if (user)
+      return (
+        <div className={classes.root}>
+          {saveCompleted && (
+            <Alert className={classes.alert} severity='success'>
+              আপনার তথ্য সংরক্ষণ হয়েছে
+            </Alert>
+          )}
+          <div className={classes.topContainer}>
+            <Typography variant='h5' className={classes.header}>
+              সন্তান ও বয়স ভিত্তিক দম্পতিদের বিন্যাস-{riportingYear}
+            </Typography>
+          </div>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <div className={classes.tableContainer}>
+              <div className={classes.info}>
+                <Typography component='div'>ইউনিয়নঃ {unionName}</Typography>
+                <YearList
+                  riportingYear={riportingYear}
+                  setRiportingYear={setRiportingYear}
+                />
+                <UnitList unit={unit} setUnit={handleUnitChange} />
+                <TextField
+                  value={fwaName}
+                  onChange={(e) => setFwaName(e.target.value)}
+                  label='এফডব্লিউএ এর নাম'
+                  placeholder='নাম লিখুন ...'
+                />
+                <AgeRange ageRange={ageRange} setAgeRange={setAgeRange} />
+              </div>
+              <FormTable
+                ageRange={ageRange}
+                rowOne={rowOne}
+                setRowOne={setRowOne}
+                rowTwo={rowTwo}
+                setRowTwo={setRowTwo}
+                rowThree={rowThree}
+                setRowThree={setRowThree}
+                rowFour={rowFour}
+                setRowFour={setRowFour}
+              />
+            </div>
+            <div className={classes.formActions}>
+              <Button
+                color='secondary'
+                style={{ marginRight: 10 }}
+                variant='contained'
+                onClick={handleClear}
+              >
+                মুছে ফেলুন
+              </Button>
+              <Button
+                disabled={
+                  unionName !== user?.union ||
+                  !riportingYear ||
+                  !unit ||
+                  !fwaName ||
+                  !ageRange ||
+                  submitingData
+                }
+                color='primary'
+                variant='contained'
+                type='submit'
+              >
+                সংরক্ষণ করুন
+              </Button>
+            </div>
+          </form>
+        </div>
+      );
+    else
+      return (
+        <div className={classes.progressContainer}>
+          <Typography variant='h6'>
+            দম্পতি ফরম পেতে{' '}
+            <Link className={classes.link} to='/login'>
+              লগইন করুন
+            </Link>
           </Typography>
         </div>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <div className={classes.tableContainer}>
-            <div className={classes.info}>
-              <Typography component='div'>ইউনিয়নঃ {unionName}</Typography>
-              <YearList
-                riportingYear={riportingYear}
-                setRiportingYear={setRiportingYear}
-              />
-              <UnitList unit={unit} setUnit={handleUnitChange} />
-              <TextField
-                value={fwaName}
-                onChange={(e) => setFwaName(e.target.value)}
-                label='এফডব্লিউএ এর নাম'
-                placeholder='নাম লিখুন ...'
-              />
-              <AgeRange ageRange={ageRange} setAgeRange={setAgeRange} />
-            </div>
-            <FormTable
-              ageRange={ageRange}
-              rowOne={rowOne}
-              setRowOne={setRowOne}
-              rowTwo={rowTwo}
-              setRowTwo={setRowTwo}
-              rowThree={rowThree}
-              setRowThree={setRowThree}
-              rowFour={rowFour}
-              setRowFour={setRowFour}
-            />
-          </div>
-          <div className={classes.formActions}>
-            <Button
-              color='secondary'
-              style={{ marginRight: 10 }}
-              variant='contained'
-              onClick={handleClear}
-            >
-              মুছে ফেলুন
-            </Button>
-            <Button
-              disabled={
-                unionName !== user?.union ||
-                !riportingYear ||
-                !unit ||
-                !fwaName ||
-                !ageRange ||
-                submitingData
-              }
-              color='primary'
-              variant='contained'
-              type='submit'
-            >
-              সংরক্ষণ করুন
-            </Button>
-          </div>
-        </form>
-      </div>
-    );
-  else
-    return (
-      <div className={classes.progressContainer}>
-        <Typography variant='h6'>
-          দম্পতি ফরম পেতে{' '}
-          <Link className={classes.link} to='/login'>
-            লগইন করুন
-          </Link>
-        </Typography>
-      </div>
-    );
+      );
+  }
 };
 
 export default CoupleForm;

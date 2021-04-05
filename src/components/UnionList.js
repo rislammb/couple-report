@@ -29,7 +29,7 @@ const UnionList = (props) => {
         <MenuItem value='০৫-আউচপাড়া'>০৫-আউচপাড়া</MenuItem>
         <MenuItem value='০৬-শ্রীপুর'>০৬-শ্রীপুর</MenuItem>
         <MenuItem value='০৭-বাসুপাড়া'>০৭-বাসুপাড়া</MenuItem>
-        <MenuItem value='০৮-কাচারী কোয়ালীপাড়া'>০৮-কাচারী কোয়ালীপাড়া</MenuItem>
+        <MenuItem value='০৮-কাচারীকোয়ালীপাড়া'>০৮-কাচারী কোয়ালীপাড়া</MenuItem>
         <MenuItem value='০৯-শুভডাঙ্গা'>০৯-শুভডাঙ্গা</MenuItem>
         <MenuItem value='১০-মাড়িয়া'>১০-মাড়িয়া</MenuItem>
         <MenuItem value='১১-গণিপুর'>১১-গণিপুর</MenuItem>

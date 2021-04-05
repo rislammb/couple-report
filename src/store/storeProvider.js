@@ -56,29 +56,52 @@ const StoreProvider = () => {
   });
 
   const createUser = ({ name, email, password, union }) => {
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((data) => {
-        const newUser = {
-          name,
-          email,
-          union,
-          uid: data.user.uid,
-        };
-        return db
-          .collection('users')
-          .doc(data.user.uid)
-          .set(newUser)
-          .then(() => setUser(newUser));
+    const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও.${name}` : union;
+    let unionExist = false;
+    db.collection('users')
+      .get()
+      .then((doc) => {
+        doc.docs.forEach((doc) => {
+          if (doc.data().union === unionName) {
+            unionExist = true;
+          }
+        });
       })
-      .catch((err) => {
-        if (err.code === 'auth/email-already-in-use') {
-          setUserError({ create: 'এই ইমেইল আগেই ব্যবহৃত হয়েছে!' });
-        } else if (err.code === 'auth/network-request-failed') {
-          setUserError({ create: 'একাউন্ট খুলতে ইন্টারনেট সংযোগ দিন!' });
+      .then(() => {
+        if (unionExist) {
+          setUserError({
+            create: `${unionName} এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`,
+          });
         } else {
-          setUserError({ create: 'কিছু সমস্যা হয়েছে! আবার চেষ্টা করুন' });
+          firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then((data) => {
+              const newUser = {
+                name,
+                email,
+                union: unionName,
+                uid: data.user.uid,
+              };
+              return db
+                .collection('users')
+                .doc(data.user.uid)
+                .set(newUser)
+                .then(() => setUser(newUser));
+            })
+            .catch((err) => {
+              if (err.code === 'auth/email-already-in-use') {
+                setUserError({ create: 'এই ইমেইল আগেই ব্যবহৃত হয়েছে!' });
+              } else if (err.code === 'auth/network-request-failed') {
+                setUserError({
+                  create: 'একাউন্ট খুলতে ইন্টারনেট সংযোগ দিন!',
+                });
+              } else {
+                setUserError({
+                  create: 'কিছু সমস্যা হয়েছে! আবার চেষ্টা করুন',
+                });
+              }
+            });
         }
       });
   };
@@ -92,9 +115,7 @@ const StoreProvider = () => {
           .collection('users')
           .doc(res.user.uid)
           .get()
-          .then((doc) => {
-            setUser(doc.data());
-          })
+          .then((doc) => setUser(doc.data()))
       )
       .catch((err) => {
         if (err.code === 'auth/user-not-found') {
@@ -132,6 +153,7 @@ const StoreProvider = () => {
   };
 
   const logoutUser = () => {
+    console.log('log out');
     return firebase
       .auth()
       .signOut()
@@ -159,25 +181,21 @@ const StoreProvider = () => {
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        return db
-          .collection('users')
-          .doc(firebase.auth().currentUser?.uid)
-          .get()
-          .then((doc) => {
-            setUser(doc.data());
-          })
-          .then(() => setAuthLoading(false))
-          .catch(() => {
-            setUser(null);
-            setAuthLoading(false);
-          });
-      } else {
-        setUser(null);
-        setAuthLoading(false);
-      }
-    });
+    async function loadUser() {
+      const loggedUser = await firebase.auth().currentUser;
+      db.collection('users')
+        .doc(loggedUser?.uid)
+        .get()
+        .then((doc) => {
+          setUser(doc.data());
+        })
+        .then(() => setAuthLoading(false))
+        .catch(() => {
+          setUser(null);
+          setAuthLoading(false);
+        });
+    }
+    loadUser();
   }, [firebase.auth().currentUser]);
 
   return (
