@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, CircularProgress } from '@material-ui/core';
 
-import LoadRiportForm from '../components/LoadRiportForm';
-import PrintTable from '../components/PrintTable';
+import LoadRiportForm from '../components/fullForm/LoadRiportForm';
+import FullFormTable from '../components/fullForm/FullFormTable';
 
 import StoreContext from '../store/storeContext';
 
@@ -53,7 +53,7 @@ const PrintPage = (props) => {
           unit={unit}
           setUnit={setUnit}
         />
-        <PrintTable
+        <FullFormTable
           riportingYear={riportingYear}
           unionName={unionName}
           unit={unit}

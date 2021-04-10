@@ -50,7 +50,7 @@ function replaceToBangla(input) {
 export const getRowTotal = (rowValue) => {
   let totalValue = 0;
   Object.entries(rowValue).map((item) => {
-    if (item[0] < 'p') {
+    if (item[0] < 'o') {
       totalValue += +replaceToEnglish(item[1]);
     }
   });
@@ -89,9 +89,9 @@ export const getTotal = (...props) => {
   return replaceToBangla(totalValue.toString());
 };
 
-export const getTotalFromArray = (aray) => {
+export const getTotalFromArray = (array) => {
   let totalValue = 0;
-  aray.map((item) => {
+  array.map((item) => {
     totalValue += +replaceToEnglish(item);
   });
   return replaceToBangla(totalValue.toString());

@@ -24,6 +24,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
+db.enablePersistence();
+
 const StoreProvider = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState(null);

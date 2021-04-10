@@ -11,11 +11,11 @@ import Alert from '@material-ui/lab/Alert';
 
 import YearList from '../components/YearList';
 import UnitList from '../components/UnitList';
-import FormTable from '../components/FormTable';
+import FormTable from '../components/formTable/FormTable';
 import AgeRange from '../components/AgeRange';
 
-import { getYear } from '../functions';
-import { rowFourValue, rowOneValue, rowThreeValue, rowTwoValue } from '../data';
+import { getYear, getRowTotal } from '../functions';
+import { rowValue } from '../data';
 
 import StoreContext from '../store/storeContext';
 import { db } from '../store/storeProvider';
@@ -84,10 +84,11 @@ const CoupleForm = (props) => {
   const classes = useStyles();
   const { user, authLoading, setStoreZeroRowTotal } = useContext(StoreContext);
 
-  const [rowOne, setRowOne] = useState({ ...rowOneValue });
-  const [rowTwo, setRowTwo] = useState({ ...rowTwoValue });
-  const [rowThree, setRowThree] = useState({ ...rowThreeValue });
-  const [rowFour, setRowFour] = useState({ ...rowFourValue });
+  // const [rowOne, setRowOne] = useState({ ...rowOneValue });
+  const [rowOne, setRowOne] = useState({ ...rowValue });
+  const [rowTwo, setRowTwo] = useState({ ...rowValue });
+  const [rowThree, setRowThree] = useState({ ...rowValue });
+  const [rowFour, setRowFour] = useState({ ...rowValue });
 
   const [riportingYear, setRiportingYear] = useState(getYear());
   const [unit, setUnit] = useState('১ক');
@@ -96,11 +97,107 @@ const CoupleForm = (props) => {
   const [submitingData, setSubmitingData] = useState(false);
   const [saveCompleted, setSaveCompleted] = useState(false);
 
+  useEffect(() => {
+    setRowOne((prev) => {
+      return {
+        ...prev,
+        o: getRowTotal(rowOne),
+      };
+    });
+  }, [
+    rowOne.a,
+    rowOne.b,
+    rowOne.c,
+    rowOne.d,
+    rowOne.e,
+    rowOne.f,
+    rowOne.g,
+    rowOne.h,
+    rowOne.i,
+    rowOne.j,
+    rowOne.k,
+    rowOne.l,
+    rowOne.m,
+    rowOne.n,
+  ]);
+
+  useEffect(() => {
+    setRowTwo((prev) => {
+      return {
+        ...prev,
+        o: getRowTotal(rowTwo),
+      };
+    });
+  }, [
+    rowTwo.a,
+    rowTwo.b,
+    rowTwo.c,
+    rowTwo.d,
+    rowTwo.e,
+    rowTwo.f,
+    rowTwo.g,
+    rowTwo.h,
+    rowTwo.i,
+    rowTwo.j,
+    rowTwo.k,
+    rowTwo.l,
+    rowTwo.m,
+    rowTwo.n,
+  ]);
+
+  useEffect(() => {
+    setRowThree((prev) => {
+      return {
+        ...prev,
+        o: getRowTotal(rowThree),
+      };
+    });
+  }, [
+    rowThree.a,
+    rowThree.b,
+    rowThree.c,
+    rowThree.d,
+    rowThree.e,
+    rowThree.f,
+    rowThree.g,
+    rowThree.h,
+    rowThree.i,
+    rowThree.j,
+    rowThree.k,
+    rowThree.l,
+    rowThree.m,
+    rowThree.n,
+  ]);
+
+  useEffect(() => {
+    setRowFour((prev) => {
+      return {
+        ...prev,
+        o: getRowTotal(rowFour),
+      };
+    });
+  }, [
+    rowFour.a,
+    rowFour.b,
+    rowFour.c,
+    rowFour.d,
+    rowFour.e,
+    rowFour.f,
+    rowFour.g,
+    rowFour.h,
+    rowFour.i,
+    rowFour.j,
+    rowFour.k,
+    rowFour.l,
+    rowFour.m,
+    rowFour.n,
+  ]);
+
   const handleClear = () => {
-    setRowOne({ ...rowOneValue });
-    setRowTwo({ ...rowTwoValue });
-    setRowThree({ ...rowThreeValue });
-    setRowFour({ ...rowFourValue });
+    setRowOne({ ...rowValue });
+    setRowTwo({ ...rowValue });
+    setRowThree({ ...rowValue });
+    setRowFour({ ...rowValue });
     setStoreZeroRowTotal({ t1: '০', t2: '০', t3: '০', t4: '০' });
   };
 
@@ -146,7 +243,7 @@ const CoupleForm = (props) => {
           setSubmitingData(false);
           setTimeout(() => {
             setSaveCompleted(false);
-          }, 4700);
+          }, 4100);
         })
         .catch((err) => {
           console.log('Data saved Faild!', err);
@@ -159,6 +256,7 @@ const CoupleForm = (props) => {
   };
 
   useEffect(() => {
+    handleClear();
     db.collection('couple-riport-1')
       .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
       .get()

@@ -1,33 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, Typography, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
-import TableHead from './TableHead';
+import TableHead from '../TableHead';
 
-import PrintRowOne from './PrintRowOne';
-import PrintRowTwo from './PrintRowTwo';
-import PrintRowThree from './PrintRowThree';
-import PrintRowFour from './PrintRowFour';
-import PrintRowFive from './PrintRowFive';
+import UnitRange from './UnitRange';
+import UnitTotalRange from './UnitTotalRange';
+import UnionRange from './UnionRange';
+import UnionTotalRange from './UnionTotalRange';
 
-import UnionZeroRange from './unionTable/UnionZeroRange';
-import UnionTwentyRange from './unionTable/UnionTwentyRange';
-import UnionThirtyRange from './unionTable/UnionThirtyRange';
-import UnionFortyRange from './unionTable/UnionFortyRange';
-import UnionTotalRange from './unionTable/UnionTotalRange';
+import FormFooter from './FormFooter';
 
-import RowOne from './totalRows/RowOne';
-import RowTwo from './totalRows/RowTwo';
-import RowThree from './totalRows/RowThree';
-import RowFour from './totalRows/RowFour';
-import TotalRowFive from './totalRows/RowFive';
+import { db } from '../../store/storeProvider';
 
-import { db } from '../store/storeProvider';
-
-import StoreContext from '../store/storeContext';
-
-import { rowOneValue, rowTwoValue, rowThreeValue, rowFourValue } from '../data';
+import { rowValue } from '../../data';
 
 const useStyles = makeStyles({
   printContainer: {
@@ -80,16 +67,6 @@ const useStyles = makeStyles({
     left: 7,
     top: 7,
   },
-  footerContainer: {
-    display: 'none',
-    '@media print': {
-      display: 'block',
-    },
-  },
-  footerTextContainer: {
-    display: 'flex',
-  },
-  date: { flex: 1, textAlign: 'left' },
   btnContainer: {
     textAlign: 'center',
     paddingTop: 10,
@@ -109,21 +86,15 @@ const useStyles = makeStyles({
 });
 
 const ageRangeValue = {
-  rowOne: { ...rowOneValue },
-  rowTwo: { ...rowTwoValue },
-  rowThree: { ...rowThreeValue },
-  rowFour: { ...rowFourValue },
+  rowOne: { ...rowValue },
+  rowTwo: { ...rowValue },
+  rowThree: { ...rowValue },
+  rowFour: { ...rowValue },
 };
 
-const PrintTable = (props) => {
+const FullFormTable = (props) => {
   const classes = useStyles();
   const { user, riportingYear, unionName, unit } = props;
-  const {
-    storeZeroRowTotal,
-    storeTwentyRowTotal,
-    storeThirtyRowTotal,
-    storeFortyRowTotal,
-  } = useContext(StoreContext);
   const [dataNull, setDataNull] = useState(false);
   const [stableConnection, setStableConnection] = useState(true);
 
@@ -139,6 +110,13 @@ const PrintTable = (props) => {
   const [unionFortyRange, setUnionFortyRange] = useState([]);
   const [submitCompleted, setSubmitCompleted] = useState(false);
 
+  const handleClear = () => {
+    setZeroRange({ ...ageRangeValue });
+    setTwentyRange({ ...ageRangeValue });
+    setThirtyRange({ ...ageRangeValue });
+    setFortyRange({ ...ageRangeValue });
+  };
+
   const handleDataSubmit = () => {
     setSubmitCompleted(false);
 
@@ -147,45 +125,16 @@ const PrintTable = (props) => {
         if (
           window.confirm(`আপনি কি ${unit} ইউনিটের প্রতিবেদনটি সাবমিট করতে চান?`)
         ) {
-          const newZeroRange = {
-            ...zeroRange,
-            rowOne: { ...zeroRange.rowOne, o1: storeZeroRowTotal.t1 },
-            rowTwo: { ...zeroRange.rowTwo, o2: storeZeroRowTotal.t2 },
-            rowThree: { ...zeroRange.rowThree, o3: storeZeroRowTotal.t3 },
-            rowFour: { ...zeroRange.rowFour, o4: storeZeroRowTotal.t4 },
-          };
-          const newTwentyRange = {
-            ...twentyRange,
-            rowOne: { ...twentyRange.rowOne, o1: storeTwentyRowTotal.t1 },
-            rowTwo: { ...twentyRange.rowTwo, o2: storeTwentyRowTotal.t2 },
-            rowThree: { ...twentyRange.rowThree, o3: storeTwentyRowTotal.t3 },
-            rowFour: { ...twentyRange.rowFour, o4: storeTwentyRowTotal.t4 },
-          };
-          const newThirtyRange = {
-            ...thirtyRange,
-            rowOne: { ...thirtyRange.rowOne, o1: storeThirtyRowTotal.t1 },
-            rowTwo: { ...thirtyRange.rowTwo, o2: storeThirtyRowTotal.t2 },
-            rowThree: { ...thirtyRange.rowThree, o3: storeThirtyRowTotal.t3 },
-            rowFour: { ...thirtyRange.rowFour, o4: storeThirtyRowTotal.t4 },
-          };
-          const newFortyRange = {
-            ...fortyRange,
-            rowOne: { ...fortyRange.rowOne, o1: storeFortyRowTotal.t1 },
-            rowTwo: { ...fortyRange.rowTwo, o2: storeFortyRowTotal.t2 },
-            rowThree: { ...fortyRange.rowThree, o3: storeFortyRowTotal.t3 },
-            rowFour: { ...fortyRange.rowFour, o4: storeFortyRowTotal.t4 },
-          };
           const dataToSubmit = {
             riportingYear,
             unionName,
             unit,
             fwaName,
-            zeroRange: newZeroRange,
-            twentyRange: newTwentyRange,
-            thirtyRange: newThirtyRange,
-            fortyRange: newFortyRange,
+            zeroRange,
+            twentyRange,
+            thirtyRange,
+            fortyRange,
           };
-
           return db
             .collection('couple-riport-2')
             .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
@@ -200,7 +149,6 @@ const PrintTable = (props) => {
                   })
                   .catch((err) => console.log('riport submitted err', err));
               } else {
-                console.log('nai');
                 return db
                   .collection('couple-riport-2')
                   .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
@@ -214,7 +162,7 @@ const PrintTable = (props) => {
               setSubmitCompleted(true);
               setTimeout(() => {
                 setSubmitCompleted(false);
-              }, 4700);
+              }, 4100);
             });
         }
       } else {
@@ -228,10 +176,7 @@ const PrintTable = (props) => {
   useEffect(() => {
     setDataNull(false);
     setFwaName('');
-    setZeroRange({ ...ageRangeValue });
-    setTwentyRange({ ...ageRangeValue });
-    setThirtyRange({ ...ageRangeValue });
-    setFortyRange({ ...ageRangeValue });
+    handleClear();
     if (unit) {
       db.collection('couple-riport-1')
         .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
@@ -251,13 +196,10 @@ const PrintTable = (props) => {
             else setFwaName('');
           } else {
             setDataNull(true);
-            setZeroRange({ ...ageRangeValue });
-            setTwentyRange({ ...ageRangeValue });
-            setThirtyRange({ ...ageRangeValue });
-            setFortyRange({ ...ageRangeValue });
+            handleClear();
             setTimeout(() => {
               setDataNull(false);
-            }, 3700);
+            }, 4100);
           }
         })
         .catch((err) => {
@@ -265,7 +207,7 @@ const PrintTable = (props) => {
             setStableConnection(false);
             setTimeout(() => {
               setStableConnection(true);
-            }, 3700);
+            }, 4100);
           }
         });
     } else {
@@ -297,7 +239,7 @@ const PrintTable = (props) => {
             setUnionFortyRange([]);
             setTimeout(() => {
               setDataNull(false);
-            }, 3700);
+            }, 4100);
           }
         })
         .catch((err) => {
@@ -305,7 +247,7 @@ const PrintTable = (props) => {
             setStableConnection(false);
             setTimeout(() => {
               setStableConnection(true);
-            }, 4700);
+            }, 4100);
           }
         });
     }
@@ -358,7 +300,7 @@ const PrintTable = (props) => {
             <Typography>জেলাঃ রাজশাহী</Typography>
             <Typography>বছরঃ {riportingYear}খ্রিঃ</Typography>
           </div>
-          <div className='printTable'>
+          <div className='FullFormTable'>
             <div>
               {!stableConnection ? (
                 <Alert className={classes.alert} severity='warning'>
@@ -379,103 +321,11 @@ const PrintTable = (props) => {
                 <TableHead />
                 {unit ? (
                   <TableBody>
-                    <PrintRowOne ageRange='<২০' rowOne={zeroRange.rowOne} />
-                    <PrintRowTwo ageRange='<২০' rowTwo={zeroRange.rowTwo} />
-                    <PrintRowThree
-                      ageRange='<২০'
-                      rowThree={zeroRange.rowThree}
-                    />
-                    <PrintRowFour ageRange='<২০' rowFour={zeroRange.rowFour} />
-                    <PrintRowFive
-                      ageRange='<২০'
-                      rowOne={zeroRange.rowOne}
-                      rowTwo={zeroRange.rowTwo}
-                      rowThree={zeroRange.rowThree}
-                      rowFour={zeroRange.rowFour}
-                    />
-
-                    <PrintRowOne ageRange='২০-২৯' rowOne={twentyRange.rowOne} />
-                    <PrintRowTwo ageRange='২০-২৯' rowTwo={twentyRange.rowTwo} />
-                    <PrintRowThree
-                      ageRange='২০-২৯'
-                      rowThree={twentyRange.rowThree}
-                    />
-                    <PrintRowFour
-                      ageRange='২০-২৯'
-                      rowFour={twentyRange.rowFour}
-                    />
-                    <PrintRowFive
-                      ageRange='২০-২৯'
-                      rowOne={twentyRange.rowOne}
-                      rowTwo={twentyRange.rowTwo}
-                      rowThree={twentyRange.rowThree}
-                      rowFour={twentyRange.rowFour}
-                    />
-
-                    <PrintRowOne ageRange='৩০-৩৯' rowOne={thirtyRange.rowOne} />
-                    <PrintRowTwo ageRange='৩০-৩৯' rowTwo={thirtyRange.rowTwo} />
-                    <PrintRowThree
-                      ageRange='৩০-৩৯'
-                      rowThree={thirtyRange.rowThree}
-                    />
-                    <PrintRowFour
-                      ageRange='৩০-৩৯'
-                      rowFour={thirtyRange.rowFour}
-                    />
-                    <PrintRowFive
-                      ageRange='৩০-৩৯'
-                      rowOne={thirtyRange.rowOne}
-                      rowTwo={thirtyRange.rowTwo}
-                      rowThree={thirtyRange.rowThree}
-                      rowFour={thirtyRange.rowFour}
-                    />
-
-                    <PrintRowOne ageRange='৪০-৪৯' rowOne={fortyRange.rowOne} />
-                    <PrintRowTwo ageRange='৪০-৪৯' rowTwo={fortyRange.rowTwo} />
-                    <PrintRowThree
-                      ageRange='৪০-৪৯'
-                      rowThree={fortyRange.rowThree}
-                    />
-                    <PrintRowFour
-                      ageRange='৪০-৪৯'
-                      rowFour={fortyRange.rowFour}
-                    />
-                    <PrintRowFive
-                      ageRange='৪০-৪৯'
-                      rowOne={fortyRange.rowOne}
-                      rowTwo={fortyRange.rowTwo}
-                      rowThree={fortyRange.rowThree}
-                      rowFour={fortyRange.rowFour}
-                    />
-
-                    <RowOne
-                      ageRange='সর্বমোট'
-                      zeroRowOne={zeroRange.rowOne}
-                      twentyRowOne={twentyRange.rowOne}
-                      thirtyRowOne={thirtyRange.rowOne}
-                      fortyRowOne={fortyRange.rowOne}
-                    />
-                    <RowTwo
-                      zeroRowTwo={zeroRange.rowTwo}
-                      twentyRowTwo={twentyRange.rowTwo}
-                      thirtyRowTwo={thirtyRange.rowTwo}
-                      fortyRowTwo={fortyRange.rowTwo}
-                    />
-
-                    <RowThree
-                      zeroRowThree={zeroRange.rowThree}
-                      twentyRowThree={twentyRange.rowThree}
-                      thirtyRowThree={thirtyRange.rowThree}
-                      fortyRowThree={fortyRange.rowThree}
-                    />
-
-                    <RowFour
-                      zeroRowFour={zeroRange.rowFour}
-                      twentyRowFour={twentyRange.rowFour}
-                      thirtyRowFour={thirtyRange.rowFour}
-                      fortyRowFour={fortyRange.rowFour}
-                    />
-                    <TotalRowFive
+                    <UnitRange ageRange='<২০' rangeData={zeroRange} />
+                    <UnitRange ageRange='২০-২৯' rangeData={twentyRange} />
+                    <UnitRange ageRange='৩০-৩৯' rangeData={thirtyRange} />
+                    <UnitRange ageRange='৪০-৪৯' rangeData={fortyRange} />
+                    <UnitTotalRange
                       zeroRange={zeroRange}
                       twentyRange={twentyRange}
                       thirtyRange={thirtyRange}
@@ -484,50 +334,37 @@ const PrintTable = (props) => {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    <UnionZeroRange unionZeroRange={unionZeroRange} />
-                    <UnionTwentyRange unionTwentyRange={unionTwentyRange} />
-                    <UnionThirtyRange unionThirtyRange={unionThirtyRange} />
-                    <UnionFortyRange unionFortyRange={unionFortyRange} />
+                    <UnionRange
+                      ageRange='<২০'
+                      unionRangeData={unionZeroRange}
+                    />
+                    <UnionRange
+                      ageRange='২০-২৯'
+                      unionRangeData={unionTwentyRange}
+                    />
+                    <UnionRange
+                      ageRange='৩০-৩৯'
+                      unionRangeData={unionThirtyRange}
+                    />
+                    <UnionRange
+                      ageRange='৪০-৪৯'
+                      unionRangeData={unionFortyRange}
+                    />
                     <UnionTotalRange
-                      unionZeroRange={unionZeroRange}
-                      unionTwentyRange={unionTwentyRange}
-                      unionThirtyRange={unionThirtyRange}
-                      unionFortyRange={unionFortyRange}
+                      zeroRange={unionZeroRange}
+                      twentyRange={unionTwentyRange}
+                      thirtyRange={unionThirtyRange}
+                      fortyRange={unionFortyRange}
                     />
                   </TableBody>
                 )}
               </Table>
-              <div className={classes.footerContainer}>
-                <br />
-                <br />
-                <br />
-                <br />
-                <div className={classes.footerTextContainer}>
-                  <Typography className={classes.date}>তারিখঃ</Typography>
-                  {unionName.includes('এনজিও') ? (
-                    <div>
-                      <Typography>{unionName}</Typography>
-                      <Typography>বাগমারা, রাজশাহী।</Typography>
-                    </div>
-                  ) : unit ? (
-                    <div>
-                      {fwaName && <Typography>( {fwaName} )</Typography>}
-                      <Typography>পরিবার কলাণ সহকারী</Typography>
-                      <Typography>
-                        {unit} ইউনিট, {unionName} ইউনিয়ন
-                      </Typography>
-                      <Typography>বাগমারা, রাজশাহী।</Typography>
-                    </div>
-                  ) : (
-                    <div>
-                      <Typography>( {user.name} )</Typography>
-                      <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
-                      <Typography>{unionName} ইউনিয়ন</Typography>
-                      <Typography>বাগমারা, রাজশাহী।</Typography>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <FormFooter
+                unionName={unionName}
+                fwaName={fwaName}
+                unit={unit}
+                user={user}
+              />
             </div>
           </div>
         </div>
@@ -556,4 +393,4 @@ const PrintTable = (props) => {
     </div>
   );
 };
-export default PrintTable;
+export default FullFormTable;

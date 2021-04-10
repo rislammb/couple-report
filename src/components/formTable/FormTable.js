@@ -2,33 +2,15 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody } from '@material-ui/core';
 
-import TableHead from './TableHead';
-import RowOne from './RowOne';
-import RowTwo from './RowTwo';
-import RowThree from './RowThree';
-import RowFour from './RowFour';
-import RowFive from './RowFive';
+import TableHead from '../TableHead';
+import FormRow from './FormRow';
+import TotalRow from '../TotalRow';
 
 const useStyles = makeStyles({
   table: {
     width: 'calc(100% - 142px)',
     minWidth: '1000px',
     margin: '15px auto',
-    // '& thead tr': {
-    //   height: '230px',
-    // },
-    // '& thead tr th': {
-    //   transform: 'rotate(-90deg)',
-    //   width: '230px',
-    //   height: '230px',
-    // },
-    // '& th, td': {
-    //   border: '1px solid #333',
-    // },
-  },
-  th: {
-    // // transformOrigin: '0 0',
-    // transform: 'rotate(-90deg)',
   },
 });
 
@@ -57,11 +39,17 @@ const FormTable = (props) => {
     <Table className={classes.table}>
       <TableHead />
       <TableBody>
-        <RowOne ageRange={ageRange} rowOne={rowOne} setRowOne={setRowOne} />
-        <RowTwo rowTwo={rowTwo} setRowTwo={setRowTwo} />
-        <RowThree rowThree={rowThree} setRowThree={setRowThree} />
-        <RowFour rowFour={rowFour} setRowFour={setRowFour} />
-        <RowFive
+        <FormRow
+          ageRange={ageRange}
+          rowData={rowOne}
+          setRowData={setRowOne}
+          childRange='০'
+          frist
+        />
+        <FormRow rowData={rowTwo} setRowData={setRowTwo} childRange='১' />
+        <FormRow rowData={rowThree} setRowData={setRowThree} childRange='২' />
+        <FormRow rowData={rowFour} setRowData={setRowFour} childRange='৩+' />
+        <TotalRow
           rowOne={rowOne}
           rowTwo={rowTwo}
           rowThree={rowThree}
