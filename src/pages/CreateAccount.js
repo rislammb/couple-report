@@ -16,7 +16,12 @@ import EmailField from '../components/EmailField';
 import PasswordField from '../components/PasswordField';
 
 import StoreContext from '../store/storeContext';
+
+import DistrictList from '../components/DistrictList';
+import UpazilaList from '../components/UpazilaList';
 import UnionList from '../components/UnionList';
+
+import { districtInfo } from '../data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: 'center',
+    paddingBottom: 0,
     color:
       theme.palette.type === 'light'
         ? theme.palette.primary.dark
@@ -86,9 +92,11 @@ const CreateAccount = () => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      union: '০১-গোবিন্দপাড়া',
       email: '',
       password: '',
+      district: 'বাগেরহাট',
+      upazila: '',
+      union: '',
     },
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
@@ -127,12 +135,6 @@ const CreateAccount = () => {
                 helperText={formik.touched.name && formik.errors.name}
                 className={classes.input}
               />
-              <UnionList
-                union={formik.values.union}
-                onChange={formik.handleChange}
-                error={formik.touched.union && Boolean(formik.errors.union)}
-                helperText={formik.touched.union && formik.errors.union}
-              />
               <EmailField
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -148,6 +150,29 @@ const CreateAccount = () => {
                 }
                 helperText={formik.touched.password && formik.errors.password}
                 className={classes.input}
+              />
+              <DistrictList
+                district={formik.values.district}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.district && Boolean(formik.errors.district)
+                }
+                helperText={formik.touched.district && formik.errors.district}
+              />
+              <UpazilaList
+                district={formik.values.district}
+                upazila={formik.values.upazila}
+                onChange={formik.handleChange}
+                error={formik.touched.upazila && Boolean(formik.errors.upazila)}
+                helperText={formik.touched.upazila && formik.errors.upazila}
+              />
+              <UnionList
+                district={formik.values.district}
+                upazila={formik.values.upazila}
+                union={formik.values.union}
+                onChange={formik.handleChange}
+                error={formik.touched.union && Boolean(formik.errors.union)}
+                helperText={formik.touched.union && formik.errors.union}
               />
               {userError?.create && (
                 <Typography color='error'>{userError?.create}</Typography>

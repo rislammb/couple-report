@@ -2,14 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   formControl: {
     minWidth: 75,
   },
-}));
+});
 
-const UnitList = (props) => {
-  const { unit, setUnit } = props;
+const UnitList = ({ unit, setUnit }) => {
   const classes = useStyles();
 
   return (

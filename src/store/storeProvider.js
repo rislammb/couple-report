@@ -32,39 +32,29 @@ const StoreProvider = () => {
   const [userError, setUserError] = useState(null);
   const [isSendEmail, setIsSendEmail] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const [storeZeroRowTotal, setStoreZeroRowTotal] = useState({
-    t1: '০',
-    t2: '০',
-    t3: '০',
-    t4: '০',
-  });
-  const [storeTwentyRowTotal, setStoreTwentyRowTotal] = useState({
-    t1: '০',
-    t2: '০',
-    t3: '০',
-    t4: '০',
-  });
-  const [storeThirtyRowTotal, setStoreThirtyRowTotal] = useState({
-    t1: '০',
-    t2: '০',
-    t3: '০',
-    t4: '০',
-  });
-  const [storeFortyRowTotal, setStoreFortyRowTotal] = useState({
-    t1: '০',
-    t2: '০',
-    t3: '০',
-    t4: '০',
-  });
 
-  const createUser = ({ name, email, password, union }) => {
+  const createUser = async ({
+    name,
+    email,
+    password,
+    district,
+    upazila,
+    union,
+  }) => {
+    console.log('create');
+    console.log(name, email, password, district, upazila, union);
     const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও.${name}` : union;
     let unionExist = false;
-    db.collection('users')
+    await db
+      .collection('users')
       .get()
       .then((doc) => {
         doc.docs.forEach((doc) => {
-          if (doc.data().union === unionName) {
+          if (
+            doc.data().district === district &&
+            doc.data().upazila === upazila &&
+            doc.data().union === unionName
+          ) {
             unionExist = true;
           }
         });
@@ -80,10 +70,12 @@ const StoreProvider = () => {
             .createUserWithEmailAndPassword(email, password)
             .then((data) => {
               const newUser = {
+                uid: data.user.uid,
                 name,
                 email,
+                district,
+                upazila,
                 union: unionName,
-                uid: data.user.uid,
               };
               return db
                 .collection('users')
@@ -216,14 +208,6 @@ const StoreProvider = () => {
         userError,
         setUserError,
         authLoading,
-        storeZeroRowTotal,
-        setStoreZeroRowTotal,
-        storeTwentyRowTotal,
-        setStoreTwentyRowTotal,
-        storeThirtyRowTotal,
-        setStoreThirtyRowTotal,
-        storeFortyRowTotal,
-        setStoreFortyRowTotal,
       }}
     >
       <ThemeProvider theme={theme}>

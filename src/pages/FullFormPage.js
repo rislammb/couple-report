@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PrintPage = (props) => {
-  const { unionName } = props.match.params;
+  const { districtName, upazilaName, unionName } = props.match.params;
   const { user, authLoading } = useContext(StoreContext);
   const classes = useStyles();
   const [riportingYear, setRiportingYear] = useState(getYear());
@@ -49,12 +49,16 @@ const PrintPage = (props) => {
         <LoadRiportForm
           riportingYear={riportingYear}
           setRiportingYear={setRiportingYear}
+          districtName={districtName}
+          upazilaName={upazilaName}
           unionName={unionName}
           unit={unit}
           setUnit={setUnit}
         />
         <FullFormTable
           riportingYear={riportingYear}
+          districtName={districtName}
+          upazilaName={upazilaName}
           unionName={unionName}
           unit={unit}
           user={user}

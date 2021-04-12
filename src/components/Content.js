@@ -17,8 +17,16 @@ const Content = () => {
       <Route exact path='/create' component={CreateAccount} />
       <Route exact path='/login' component={Login} />
       <Route exact path='/recover' component={Recover} />
-      <Route exact path='/union/:unionName' component={CoupleForm} />
-      <Route exact path='/union/:unionName/fullForm' component={FullFormPage} />
+      <Route
+        exact
+        path='/:districtName/:upazilaName/:unionName'
+        component={CoupleForm}
+      />
+      <Route
+        exact
+        path='/:districtName/:upazilaName/:unionName/fullForm'
+        component={FullFormPage}
+      />
     </Switch>
   );
 };

@@ -80,9 +80,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CoupleForm = (props) => {
-  const { unionName } = props.match.params;
+  const { districtName, upazilaName, unionName } = props.match.params;
   const classes = useStyles();
-  const { user, authLoading, setStoreZeroRowTotal } = useContext(StoreContext);
+  const { user, authLoading } = useContext(StoreContext);
 
   // const [rowOne, setRowOne] = useState({ ...rowOneValue });
   const [rowOne, setRowOne] = useState({ ...rowValue });
@@ -198,7 +198,6 @@ const CoupleForm = (props) => {
     setRowTwo({ ...rowValue });
     setRowThree({ ...rowValue });
     setRowFour({ ...rowValue });
-    setStoreZeroRowTotal({ t1: '০', t2: '০', t3: '০', t4: '০' });
   };
 
   const handleUnitChange = (unitName) => {
@@ -212,15 +211,23 @@ const CoupleForm = (props) => {
     setSaveCompleted(false);
     setSubmitingData(true);
 
-    if (unionName === user.union) {
+    if (
+      districtName === user.district &&
+      upazilaName === user.upazila &&
+      unionName === user.union
+    ) {
       db.collection('couple-riport-1')
-        .doc(`rajshahi.bagmara.${riportingYear}.${user.union}.${unit}`)
+        .doc(
+          `${user.district}.${user.upazila}.${riportingYear}.${user.union}.${unit}`
+        )
         .get()
         .then((doc) => {
           if (doc.exists) {
             return db
               .collection('couple-riport-1')
-              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}.${unit}`)
+              .doc(
+                `${user.district}.${user.upazila}.${riportingYear}.${user.union}.${unit}`
+              )
               .update({
                 fwaName,
                 [ageRange]: { rowOne, rowTwo, rowThree, rowFour },
@@ -228,7 +235,9 @@ const CoupleForm = (props) => {
           } else {
             return db
               .collection('couple-riport-1')
-              .doc(`rajshahi.bagmara.${riportingYear}.${user.union}.${unit}`)
+              .doc(
+                `${user.district}.${user.upazila}.${riportingYear}.${user.union}.${unit}`
+              )
               .set({
                 union: user.union,
                 riportingYear,
@@ -258,7 +267,9 @@ const CoupleForm = (props) => {
   useEffect(() => {
     handleClear();
     db.collection('couple-riport-1')
-      .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
+      .doc(
+        `${user.district}.${user.upazila}.${riportingYear}.${unionName}.${unit}`
+      )
       .get()
       .then((doc) => doc.data())
       .then((dbData) => {
@@ -277,7 +288,7 @@ const CoupleForm = (props) => {
           handleClear();
         }
       });
-  }, [unionName, riportingYear, unit, ageRange]);
+  }, [districtName, upazilaName, unionName, riportingYear, unit, ageRange]);
 
   if (authLoading) {
     return (
@@ -339,6 +350,8 @@ const CoupleForm = (props) => {
               </Button>
               <Button
                 disabled={
+                  districtName !== user?.district ||
+                  upazilaName !== user?.upazila ||
                   unionName !== user?.union ||
                   !riportingYear ||
                   !unit ||

@@ -15,7 +15,14 @@ const useStyles = makeStyles({
   date: { flex: 1, textAlign: 'left' },
 });
 
-const FormFooter = ({ unionName, fwaName, unit, user }) => {
+const FormFooter = ({
+  districtName,
+  upazilaName,
+  unionName,
+  fwaName,
+  unit,
+  user,
+}) => {
   const classes = useStyles();
 
   return (
@@ -38,14 +45,18 @@ const FormFooter = ({ unionName, fwaName, unit, user }) => {
             <Typography>
               {unit} ইউনিট, {unionName} ইউনিয়ন
             </Typography>
-            <Typography>বাগমারা, রাজশাহী।</Typography>
+            <Typography>
+              {upazilaName}, {districtName}।
+            </Typography>
           </div>
         ) : (
           <div>
             <Typography>( {user.name} )</Typography>
             <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
             <Typography>{unionName} ইউনিয়ন</Typography>
-            <Typography>বাগমারা, রাজশাহী।</Typography>
+            <Typography>
+              {upazilaName}, {districtName}।
+            </Typography>
           </div>
         )}
       </div>

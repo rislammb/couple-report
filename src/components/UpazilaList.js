@@ -7,38 +7,35 @@ import { districtInfo } from '../data';
 const useStyles = makeStyles((theme) => ({
   formControl: {
     minWidth: 75,
+    marginBottom: theme.spacing(1),
   },
 }));
 
-const UnionList = ({ district, upazila, union, onChange }) => {
+const UpazilaList = ({ district, upazila, onChange }) => {
   const classes = useStyles();
 
   return (
     <FormControl fullWidth className={classes.formControl}>
-      <InputLabel id='select-union'>ইউনিয়ন</InputLabel>
+      <InputLabel id='select-upazila'>উপজেলা</InputLabel>
       <Select
-        labelId='select-union'
-        id='union'
-        name='union'
-        value={union}
+        labelId='select-upazila'
+        id='upazila'
+        name='upazila'
+        value={upazila}
         onChange={onChange}
       >
         {districtInfo.map(
           (dist) =>
             dist.name === district &&
-            dist.upazila.map(
-              (upa) =>
-                upa.name === upazila &&
-                upa.union.map((union) => (
-                  <MenuItem key={union} value={union}>
-                    {union}
-                  </MenuItem>
-                ))
-            )
+            dist.upazila.map((upa) => (
+              <MenuItem key={upa.name} value={upa.name}>
+                {upa.name}
+              </MenuItem>
+            ))
         )}
       </Select>
     </FormControl>
   );
 };
 
-export default UnionList;
+export default UpazilaList;

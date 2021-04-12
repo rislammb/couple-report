@@ -59,7 +59,11 @@ const DrawerList = ({ closeDrawer }) => {
         {user && (
           <NavLink
             exact
-            to={user ? `/union/${user.union}` : '/login'}
+            to={
+              user
+                ? `/${user.district}/${user.upazila}/${user.union}`
+                : '/login'
+            }
             onClick={closeDrawer}
             activeStyle={{
               color: theme.palette.type === 'dark' ? 'lightgreen' : 'green',
@@ -77,7 +81,11 @@ const DrawerList = ({ closeDrawer }) => {
         {user && (
           <NavLink
             exact
-            to={user ? `/union/${user.union}/fullForm` : '/login'}
+            to={
+              user
+                ? `/${user.district}/${user.upazila}/${user.union}/fullForm`
+                : '/login'
+            }
             onClick={closeDrawer}
             activeStyle={{
               color: theme.palette.type === 'dark' ? 'lightgreen' : 'green',

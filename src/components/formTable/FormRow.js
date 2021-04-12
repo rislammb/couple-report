@@ -1,14 +1,6 @@
-import React, { useEffect, useContext } from 'react';
-
-import StoreContext from '../../store/storeContext';
+import React from 'react';
 
 const FormRow = ({ ageRange, rowData, setRowData, frist, childRange }) => {
-  const { storeZeroRowTotal, setStoreZeroRowTotal } = useContext(StoreContext);
-
-  useEffect(() => {
-    setStoreZeroRowTotal({ ...storeZeroRowTotal, t1: rowData.o });
-  }, [rowData.o]);
-
   return (
     <tr className='rowData'>
       {frist && (

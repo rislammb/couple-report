@@ -65,7 +65,14 @@ const Home = () => {
             {authLoading ? (
               <LinearProgress className={classes.progress} />
             ) : (
-              <Link className={classes.link} to={user ? `/union/${user.union}` : '/login'}>
+              <Link
+                className={classes.link}
+                to={
+                  user
+                    ? `/${user.district}/${user.upazila}/${user.union}`
+                    : '/login'
+                }
+              >
                 {user ? 'ফরমে যান' : 'লগইন করুন'}
               </Link>
             )}

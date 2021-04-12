@@ -94,7 +94,14 @@ const ageRangeValue = {
 
 const FullFormTable = (props) => {
   const classes = useStyles();
-  const { user, riportingYear, unionName, unit } = props;
+  const {
+    user,
+    riportingYear,
+    districtName,
+    upazilaName,
+    unionName,
+    unit,
+  } = props;
   const [dataNull, setDataNull] = useState(false);
   const [stableConnection, setStableConnection] = useState(true);
 
@@ -120,13 +127,19 @@ const FullFormTable = (props) => {
   const handleDataSubmit = () => {
     setSubmitCompleted(false);
 
-    if (unionName === user.union) {
+    if (
+      (districtName === districtName,
+      upazilaName === upazilaName,
+      unionName === user.union)
+    ) {
       if (unit) {
         if (
           window.confirm(`আপনি কি ${unit} ইউনিটের প্রতিবেদনটি সাবমিট করতে চান?`)
         ) {
           const dataToSubmit = {
             riportingYear,
+            districtName,
+            upazilaName,
             unionName,
             unit,
             fwaName,
@@ -137,13 +150,15 @@ const FullFormTable = (props) => {
           };
           return db
             .collection('couple-riport-2')
-            .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+            .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
             .get()
             .then((doc) => {
               if (doc.exists) {
                 return db
                   .collection('couple-riport-2')
-                  .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                  .doc(
+                    `${districtName}.${upazilaName}.${riportingYear}.${unionName}`
+                  )
                   .update({
                     [unit]: dataToSubmit,
                   })
@@ -151,7 +166,9 @@ const FullFormTable = (props) => {
               } else {
                 return db
                   .collection('couple-riport-2')
-                  .doc(`rajshahi.bagmara.${riportingYear}.${user.union}`)
+                  .doc(
+                    `${districtName}.${upazilaName}.${riportingYear}.${unionName}`
+                  )
                   .set({
                     [unit]: dataToSubmit,
                   })
@@ -179,7 +196,9 @@ const FullFormTable = (props) => {
     handleClear();
     if (unit) {
       db.collection('couple-riport-1')
-        .doc(`rajshahi.bagmara.${riportingYear}.${unionName}.${unit}`)
+        .doc(
+          `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${unit}`
+        )
         .get()
         .then((doc) => doc.data())
         .then((data) => {
@@ -212,7 +231,7 @@ const FullFormTable = (props) => {
         });
     } else {
       db.collection('couple-riport-2')
-        .doc(`rajshahi.bagmara.${riportingYear}.${unionName}`)
+        .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
         .get()
         .then((doc) => doc.data())
         .then((data) => {
@@ -251,7 +270,7 @@ const FullFormTable = (props) => {
           }
         });
     }
-  }, [riportingYear, unionName, unit]);
+  }, [riportingYear, districtName, upazilaName, unionName, unit]);
 
   useEffect(() => {
     let rotates = document.getElementsByClassName('rotate');
@@ -296,8 +315,8 @@ const FullFormTable = (props) => {
           <div className={classes.info}>
             <Typography>ইউনিয়নঃ {unionName}</Typography>
             {unit && <Typography>ইউনিটঃ {unit}</Typography>}
-            <Typography>উপজেলাঃ বাগমারা</Typography>
-            <Typography>জেলাঃ রাজশাহী</Typography>
+            <Typography>উপজেলাঃ {upazilaName}</Typography>
+            <Typography>জেলাঃ {districtName}</Typography>
             <Typography>বছরঃ {riportingYear}খ্রিঃ</Typography>
           </div>
           <div className='FullFormTable'>
@@ -360,6 +379,8 @@ const FullFormTable = (props) => {
                 )}
               </Table>
               <FormFooter
+                districtName={districtName}
+                upazilaName={upazilaName}
                 unionName={unionName}
                 fwaName={fwaName}
                 unit={unit}
