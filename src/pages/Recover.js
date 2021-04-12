@@ -101,7 +101,14 @@ const Recover = () => {
       </div>
     );
 
-  if (user) return <Redirect to={user.shopUrl ? `/p/${user.shopUrl}` : '/'} />;
+  if (user)
+    return (
+      <Redirect
+        to={
+          user.union ? `/${user.district}/${user.upazila}/${user.union}` : '/'
+        }
+      />
+    );
   return (
     <div className={classes.root}>
       <Card className={classes.card}>

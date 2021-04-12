@@ -100,7 +100,14 @@ const Login = () => {
       </div>
     );
 
-  if (user) return <Redirect to={user.union ? `/union/${user.union}` : '/'} />;
+  if (user)
+    return (
+      <Redirect
+        to={
+          user.union ? `/${user.district}/${user.upazila}/${user.union}` : '/'
+        }
+      />
+    );
   return (
     <div className={classes.root}>
       <Card className={classes.card}>

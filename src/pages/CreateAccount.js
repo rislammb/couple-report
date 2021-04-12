@@ -117,10 +117,8 @@ const CreateAccount = () => {
       </div>
     );
 
-  if (user?.union) {
-    return <Redirect to={`/union/${user.union}`} />;
-  } else if (user?.email) {
-    return <Redirect to='/' />;
+  if (user) {
+    return <Redirect to={`/${user.district}/${user.upazila}/${user.union}`} />;
   } else {
     return (
       <div className={classes.root}>
