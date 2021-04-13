@@ -268,7 +268,7 @@ const CoupleForm = (props) => {
     handleClear();
     db.collection('couple-riport-1')
       .doc(
-        `${user.district}.${user.upazila}.${riportingYear}.${unionName}.${unit}`
+        `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${unit}`
       )
       .get()
       .then((doc) => doc.data())

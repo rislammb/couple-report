@@ -20,7 +20,7 @@ const FormFooter = ({
   upazilaName,
   unionName,
   fwaName,
-  unit,
+  formOption,
   user,
 }) => {
   const classes = useStyles();
@@ -36,24 +36,36 @@ const FormFooter = ({
         {unionName.includes('এনজিও') ? (
           <div>
             <Typography>{unionName}</Typography>
-            <Typography>বাগমারা, রাজশাহী।</Typography>
-          </div>
-        ) : unit ? (
-          <div>
-            {fwaName && <Typography>( {fwaName} )</Typography>}
-            <Typography>পরিবার কলাণ সহকারী</Typography>
             <Typography>
-              {unit} ইউনিট, {unionName} ইউনিয়ন
+              {upazilaName}, {districtName}।
             </Typography>
+          </div>
+        ) : formOption === 'জেলা' ? (
+          <div>
+            <Typography>উপ-পরিচালক</Typography>
+            <Typography>{districtName} জেলা।</Typography>
+          </div>
+        ) : formOption === 'উপজেলা' ? (
+          <div>
+            <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
+            <Typography>
+              {upazilaName}, {districtName}।
+            </Typography>
+          </div>
+        ) : formOption === 'ইউনিয়ন' ? (
+          <div>
+            <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
+            <Typography>{unionName} ইউনিয়ন</Typography>
             <Typography>
               {upazilaName}, {districtName}।
             </Typography>
           </div>
         ) : (
           <div>
-            <Typography>( {user.name} )</Typography>
-            <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
-            <Typography>{unionName} ইউনিয়ন</Typography>
+            <Typography>পরিবার কলাণ সহকারী</Typography>
+            <Typography>
+              {formOption} ইউনিট, {unionName} ইউনিয়ন
+            </Typography>
             <Typography>
               {upazilaName}, {districtName}।
             </Typography>

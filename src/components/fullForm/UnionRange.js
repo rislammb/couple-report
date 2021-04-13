@@ -8,10 +8,12 @@ import { getTotalFromArray } from '../../functions';
 const UnionRange = ({ ageRange, unionRangeData }) => {
   const [totalRow, setTotalRow] = useState({ ...rowValue });
 
+  console.log('union range');
+
   const getRowData = (name) => {
     let cellData = [];
     unionRangeData.map((row) => {
-      cellData.push(
+      return cellData.push(
         row.rowOne[name],
         row.rowTwo[name],
         row.rowThree[name],
@@ -24,7 +26,7 @@ const UnionRange = ({ ageRange, unionRangeData }) => {
 
   useEffect(() => {
     if (unionRangeData) {
-      setTotalRow((prev) => {
+      return setTotalRow((prev) => {
         return {
           ...prev,
           a: getRowData('a'),

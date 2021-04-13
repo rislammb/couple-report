@@ -35,7 +35,7 @@ const PrintPage = (props) => {
   const { user, authLoading } = useContext(StoreContext);
   const classes = useStyles();
   const [riportingYear, setRiportingYear] = useState(getYear());
-  const [unit, setUnit] = useState('');
+  const [formOption, setFormOption] = useState('ইউনিয়ন');
 
   if (authLoading)
     return (
@@ -49,18 +49,15 @@ const PrintPage = (props) => {
         <LoadRiportForm
           riportingYear={riportingYear}
           setRiportingYear={setRiportingYear}
-          districtName={districtName}
-          upazilaName={upazilaName}
-          unionName={unionName}
-          unit={unit}
-          setUnit={setUnit}
+          formOption={formOption}
+          setFormOption={setFormOption}
         />
         <FullFormTable
           riportingYear={riportingYear}
           districtName={districtName}
           upazilaName={upazilaName}
           unionName={unionName}
-          unit={unit}
+          formOption={formOption}
           user={user}
         />
       </div>

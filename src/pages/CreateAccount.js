@@ -1,7 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card,
@@ -17,11 +15,10 @@ import PasswordField from '../components/PasswordField';
 
 import StoreContext from '../store/storeContext';
 
-import DistrictList from '../components/DistrictList';
-import UpazilaList from '../components/UpazilaList';
-import UnionList from '../components/UnionList';
-
-import { districtInfo } from '../data';
+import DistrictList from '../components/createAccount/DistrictList';
+import UpazilaList from '../components/createAccount/UpazilaList';
+import UnionList from '../components/createAccount/UnionList';
+import AccountType from '../components/createAccount/AccountType';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,44 +64,61 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const validationSchema = yup.object({
-  name: yup
-    .string('আপনার নাম দিন')
-    .min(3, 'নাম কমপক্ষে ৭ অক্ষরের হতে হবে')
-    .required('নাম দিতেই হবে'),
-  union: yup.string('আপনার ইউনিয়ন সিলেক্ট করুন').required('ইউনিয়ন দিতেই হবে'),
-  email: yup
-    .string('আপনার ইমেইল দিন')
-    .email('সঠিক ইমেইল দিন')
-    .required('ইমেইল দিতেই হবে'),
-  password: yup
-    .string('আপনার পাসওয়ার্ড দিন')
-    .min(7, 'পাসওয়ার্ড কমপক্ষে ৭ অক্ষরের হতে হবে')
-    .required('পাসওয়ার্ড দিতেই হবে'),
-});
-
 const CreateAccount = () => {
   const classes = useStyles();
   const { authLoading, user, userError, setUserError, createUser } = useContext(
     StoreContext
   );
 
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      district: 'বাগেরহাট',
-      upazila: '',
-      union: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      setUserError({});
-      await createUser(values);
-      setSubmitting(false);
-    },
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [accountType, setAccountType] = useState('ইউনিয়ন একাউন্ট');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+  const [union, setUnion] = useState('');
+
+  const handleDistrictChange = (e) => {
+    setUpazila('');
+    setUnion('');
+    setDistrict(e.target.value);
+  };
+
+  const handleUpazilaChange = (e) => {
+    setUnion('');
+    setUpazila(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setUserError({ create: '' });
+    if (name.trim().length < 3)
+      setUserError({ create: 'নাম কমপক্ষে ৩ অক্ষরের হতে হবে' });
+    else if (!email) setUserError({ create: 'ইমেইল দিতেই হবে' });
+    else if (password.length < 7)
+      setUserError({ create: 'পাসওয়ার্ড কমপক্ষে ৭ অক্ষরের হতে হবে' });
+    else if (!district) setUserError({ create: 'জেলা দিতেই হবে' });
+    else if (
+      (accountType === 'উপজেলা একাউন্ট' || accountType === 'ইউনিয়ন একাউন্ট') &&
+      !upazila
+    )
+      setUserError({ create: 'উপজেলা দিতেই হবে' });
+    else if (accountType === 'ইউনিয়ন একাউন্ট' && !union)
+      setUserError({ create: 'ইউনিয়ন দিতেই হবে' });
+    else
+      await createUser(
+        accountType,
+        name.trim(),
+        email,
+        password,
+        district,
+        upazila,
+        union
+      );
+    setIsSubmitting(false);
+  };
 
   useEffect(() => {
     setUserError({});
@@ -117,86 +131,77 @@ const CreateAccount = () => {
       </div>
     );
 
-  if (user) {
+  if (user)
     return <Redirect to={`/${user.district}/${user.upazila}/${user.union}`} />;
-  } else {
-    return (
-      <div className={classes.root}>
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title='একাউন্ট খুলুন' />
-          <CardContent>
-            <form onSubmit={formik.handleSubmit}>
-              <UserNameField
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-                className={classes.input}
-              />
-              <EmailField
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                className={classes.input}
-              />
-              <PasswordField
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
-                className={classes.input}
-              />
-              <DistrictList
-                district={formik.values.district}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.district && Boolean(formik.errors.district)
-                }
-                helperText={formik.touched.district && formik.errors.district}
-              />
+
+  return (
+    <div className={classes.root}>
+      <Card className={classes.card}>
+        <CardHeader className={classes.header} title='একাউন্ট খুলুন' />
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <AccountType
+              accountType={accountType}
+              onChange={(e) => setAccountType(e.target.value)}
+            />
+            <UserNameField
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={classes.input}
+            />
+            <EmailField
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={classes.input}
+            />
+            <PasswordField
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={classes.input}
+            />
+            <DistrictList district={district} onChange={handleDistrictChange} />
+            {accountType === 'উপজেলা একাউন্ট' ||
+            accountType === 'ইউনিয়ন একাউন্ট' ? (
               <UpazilaList
-                district={formik.values.district}
-                upazila={formik.values.upazila}
-                onChange={formik.handleChange}
-                error={formik.touched.upazila && Boolean(formik.errors.upazila)}
-                helperText={formik.touched.upazila && formik.errors.upazila}
+                district={district}
+                upazila={upazila}
+                onChange={handleUpazilaChange}
               />
+            ) : (
+              ''
+            )}
+            {accountType === 'ইউনিয়ন একাউন্ট' && (
               <UnionList
-                district={formik.values.district}
-                upazila={formik.values.upazila}
-                union={formik.values.union}
-                onChange={formik.handleChange}
-                error={formik.touched.union && Boolean(formik.errors.union)}
-                helperText={formik.touched.union && formik.errors.union}
+                district={district}
+                upazila={upazila}
+                union={union}
+                onChange={(e) => setUnion(e.target.value)}
               />
-              {userError?.create && (
-                <Typography color='error'>{userError?.create}</Typography>
-              )}
-              <div className={classes.cardActions}>
-                <Button
-                  disabled={formik.isSubmitting}
-                  color='primary'
-                  variant='contained'
-                  type='submit'
-                >
-                  একাউন্ট খুলুন
-                </Button>
-                <Typography variant='body2' className={classes.loginText}>
-                  আপনার একাউন্ট আছে?{' '}
-                  <Link className={classes.link} to='/login'>
-                    লগইন করুন
-                  </Link>
-                </Typography>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+            )}
+            {userError?.create && (
+              <Typography color='error'>{userError?.create}</Typography>
+            )}
+            <div className={classes.cardActions}>
+              <Button
+                disabled={isSubmitting}
+                color='primary'
+                variant='contained'
+                type='submit'
+              >
+                একাউন্ট খুলুন
+              </Button>
+              <Typography variant='body2' className={classes.loginText}>
+                আপনার একাউন্ট আছে?{' '}
+                <Link className={classes.link} to='/login'>
+                  লগইন করুন
+                </Link>
+              </Typography>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default CreateAccount;

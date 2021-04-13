@@ -20,6 +20,12 @@ export const rowValue = {
   s: '০',
 };
 
+export const accountTypeData = [
+  'ইউনিয়ন একাউন্ট',
+  'উপজেলা একাউন্ট',
+  'জেলা একাউন্ট',
+];
+
 export const districtInfo = [
   {
     name: 'বাগেরহাট',

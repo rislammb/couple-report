@@ -33,16 +33,15 @@ const StoreProvider = () => {
   const [isSendEmail, setIsSendEmail] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const createUser = async ({
+  const createUser = async (
+    accountType,
     name,
     email,
     password,
     district,
     upazila,
-    union,
-  }) => {
-    console.log('create');
-    console.log(name, email, password, district, upazila, union);
+    union
+  ) => {
     const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও.${name}` : union;
     let unionExist = false;
     await db
@@ -68,20 +67,21 @@ const StoreProvider = () => {
           firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
-            .then((data) => {
+            .then(async (data) => {
               const newUser = {
                 uid: data.user.uid,
+                accountType,
                 name,
                 email,
                 district,
                 upazila,
                 union: unionName,
               };
-              return db
+              await db
                 .collection('users')
                 .doc(data.user.uid)
                 .set(newUser)
-                .then(() => setUser(newUser));
+                .then(async () => await setUser(newUser));
             })
             .catch((err) => {
               if (err.code === 'auth/email-already-in-use') {
@@ -89,6 +89,10 @@ const StoreProvider = () => {
               } else if (err.code === 'auth/network-request-failed') {
                 setUserError({
                   create: 'একাউন্ট খুলতে ইন্টারনেট সংযোগ দিন!',
+                });
+              } else if (err.code === 'auth/invalid-email') {
+                setUserError({
+                  create: 'সঠিক ইমেইল দিন!',
                 });
               } else {
                 setUserError({
@@ -174,21 +178,19 @@ const StoreProvider = () => {
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
+  const loadUser = () => {
+    const loggedUser = firebase.auth().currentUser;
+    db.collection('users')
+      .doc(loggedUser?.uid)
+      .get()
+      .then(async (doc) => await setUser(doc.data()))
+      .catch(() => {
+        setUser(null);
+      })
+      .finally(() => setAuthLoading(false));
+  };
+
   useEffect(() => {
-    async function loadUser() {
-      const loggedUser = await firebase.auth().currentUser;
-      db.collection('users')
-        .doc(loggedUser?.uid)
-        .get()
-        .then((doc) => {
-          setUser(doc.data());
-        })
-        .then(() => setAuthLoading(false))
-        .catch(() => {
-          setUser(null);
-          setAuthLoading(false);
-        });
-    }
     loadUser();
   }, [firebase.auth().currentUser]);
 
@@ -196,18 +198,18 @@ const StoreProvider = () => {
     <StoreContext.Provider
       value={{
         darkMode,
-        toggleDarkMode,
+        authLoading,
         user,
+        userError,
+        isSendEmail,
+        toggleDarkMode,
         setUser,
         createUser,
         loginUser,
         logoutUser,
         recoverAccount,
-        isSendEmail,
         setIsSendEmail,
-        userError,
         setUserError,
-        authLoading,
       }}
     >
       <ThemeProvider theme={theme}>

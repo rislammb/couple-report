@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 
-import { districtInfo } from '../data';
+import { accountTypeData } from '../../data';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -11,22 +11,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DistrictList = ({ district, onChange }) => {
+const AccountType = ({ accountType, onChange }) => {
   const classes = useStyles();
 
   return (
     <FormControl fullWidth className={classes.formControl}>
-      <InputLabel id='select-district'>জেলা</InputLabel>
+      <InputLabel id='select-account-type'>একাউন্টের ধরণ</InputLabel>
       <Select
-        labelId='select-district'
-        id='district'
-        name='district'
-        value={district}
+        labelId='select-account-type'
+        id='accountType'
+        name='accountType'
+        value={accountType}
         onChange={onChange}
       >
-        {districtInfo.map((dist) => (
-          <MenuItem key={dist.name} value={dist.name}>
-            {dist.name}
+        {accountTypeData.map((type) => (
+          <MenuItem key={type} value={type}>
+            {type}
           </MenuItem>
         ))}
       </Select>
@@ -34,4 +34,4 @@ const DistrictList = ({ district, onChange }) => {
   );
 };
 
-export default DistrictList;
+export default AccountType;

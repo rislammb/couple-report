@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 
-import { districtInfo } from '../data';
+import { districtInfo } from '../../data';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

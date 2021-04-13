@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoadRiportForm = (props) => {
-  const { riportingYear, setRiportingYear, unionName, unit, setUnit } = props;
+  const { riportingYear, setRiportingYear, formOption, setFormOption } = props;
   const classes = useStyles();
 
   return (
@@ -35,16 +35,17 @@ const LoadRiportForm = (props) => {
         riportingYear={riportingYear}
         setRiportingYear={setRiportingYear}
       />
-      <Typography component='div'>ইউনিয়নঃ {unionName}</Typography>
       <FormControl className={classes.formControl}>
-        <InputLabel id='select-unit'>ইউনিট</InputLabel>
+        <InputLabel id='select-option'>ইউনিট</InputLabel>
         <Select
-          labelId='select-unit-label'
-          id='select-unit'
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
+          labelId='select-option'
+          id='select-option'
+          value={formOption}
+          onChange={(e) => setFormOption(e.target.value)}
         >
-          <MenuItem value=''>--</MenuItem>
+          <MenuItem value='জেলা'>জেলা</MenuItem>
+          <MenuItem value='উপজেলা'>উপজেলা</MenuItem>
+          <MenuItem value='ইউনিয়ন'>ইউনিয়ন</MenuItem>
           <MenuItem value='১ক'>১/ক</MenuItem>
           <MenuItem value='১খ'>১/খ</MenuItem>
           <MenuItem value='১গ'>১/গ</MenuItem>

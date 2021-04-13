@@ -77,7 +77,7 @@ const useStyles = makeStyles({
       display: 'none',
     },
   },
-  alert: {
+  alertText: {
     position: 'fixed',
     maxWidth: '90%',
     left: 7,
@@ -100,7 +100,7 @@ const FullFormTable = (props) => {
     districtName,
     upazilaName,
     unionName,
-    unit,
+    formOption,
   } = props;
   const [dataNull, setDataNull] = useState(false);
   const [stableConnection, setStableConnection] = useState(true);
@@ -128,20 +128,28 @@ const FullFormTable = (props) => {
     setSubmitCompleted(false);
 
     if (
-      (districtName === districtName,
-      upazilaName === upazilaName,
+      (districtName === user.district,
+      upazilaName === user.upazila,
       unionName === user.union)
     ) {
-      if (unit) {
+      if (
+        formOption === 'জেলা' ||
+        formOption === 'উপজেলা' ||
+        formOption === 'ইউনিয়ন'
+      ) {
+        alert(`${formOption} সাবমিটের কাজ এখনো শুরু করা হয়নি`);
+      } else {
         if (
-          window.confirm(`আপনি কি ${unit} ইউনিটের প্রতিবেদনটি সাবমিট করতে চান?`)
+          window.confirm(
+            `আপনি কি ${formOption} ইউনিটের প্রতিবেদনটি সাবমিট করতে চান?`
+          )
         ) {
           const dataToSubmit = {
             riportingYear,
             districtName,
             upazilaName,
             unionName,
-            unit,
+            unit: formOption,
             fwaName,
             zeroRange,
             twentyRange,
@@ -160,7 +168,7 @@ const FullFormTable = (props) => {
                     `${districtName}.${upazilaName}.${riportingYear}.${unionName}`
                   )
                   .update({
-                    [unit]: dataToSubmit,
+                    [formOption]: dataToSubmit,
                   })
                   .catch((err) => console.log('riport submitted err', err));
               } else {
@@ -170,7 +178,7 @@ const FullFormTable = (props) => {
                     `${districtName}.${upazilaName}.${riportingYear}.${unionName}`
                   )
                   .set({
-                    [unit]: dataToSubmit,
+                    [formOption]: dataToSubmit,
                   })
                   .catch((err) => console.log('riport submitted err', err));
               }
@@ -182,8 +190,6 @@ const FullFormTable = (props) => {
               }, 4100);
             });
         }
-      } else {
-        alert('উপজেলায় সাবমিটের কাজ এখনো শুরু করা হয়নি');
       }
     } else {
       alert('আপনি এই রিপোর্ট সাবমিটের জন্য অনুমোদিত নন!');
@@ -194,42 +200,11 @@ const FullFormTable = (props) => {
     setDataNull(false);
     setFwaName('');
     handleClear();
-    if (unit) {
-      db.collection('couple-riport-1')
-        .doc(
-          `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${unit}`
-        )
-        .get()
-        .then((doc) => doc.data())
-        .then((data) => {
-          if (data) {
-            if (data['<২০']) setZeroRange(data['<২০']);
-            else setZeroRange({ ...ageRangeValue });
-            if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
-            else setTwentyRange({ ...ageRangeValue });
-            if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
-            else setThirtyRange({ ...ageRangeValue });
-            if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
-            else setFortyRange({ ...ageRangeValue });
-            if (data.fwaName) setFwaName(data.fwaName);
-            else setFwaName('');
-          } else {
-            setDataNull(true);
-            handleClear();
-            setTimeout(() => {
-              setDataNull(false);
-            }, 4100);
-          }
-        })
-        .catch((err) => {
-          if (err.code === 'unavailable') {
-            setStableConnection(false);
-            setTimeout(() => {
-              setStableConnection(true);
-            }, 4100);
-          }
-        });
-    } else {
+    if (
+      formOption === 'জেলা' ||
+      formOption === 'উপজেলা' ||
+      formOption === 'ইউনিয়ন'
+    ) {
       db.collection('couple-riport-2')
         .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
         .get()
@@ -269,8 +244,43 @@ const FullFormTable = (props) => {
             }, 4100);
           }
         });
+    } else {
+      db.collection('couple-riport-1')
+        .doc(
+          `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
+        )
+        .get()
+        .then((doc) => doc.data())
+        .then((data) => {
+          if (data) {
+            if (data['<২০']) setZeroRange(data['<২০']);
+            else setZeroRange({ ...ageRangeValue });
+            if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+            else setTwentyRange({ ...ageRangeValue });
+            if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+            else setThirtyRange({ ...ageRangeValue });
+            if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+            else setFortyRange({ ...ageRangeValue });
+            if (data.fwaName) setFwaName(data.fwaName);
+            else setFwaName('');
+          } else {
+            setDataNull(true);
+            handleClear();
+            setTimeout(() => {
+              setDataNull(false);
+            }, 4100);
+          }
+        })
+        .catch((err) => {
+          if (err.code === 'unavailable') {
+            setStableConnection(false);
+            setTimeout(() => {
+              setStableConnection(true);
+            }, 4100);
+          }
+        });
     }
-  }, [riportingYear, districtName, upazilaName, unionName, unit]);
+  }, [riportingYear, districtName, upazilaName, unionName, formOption]);
 
   useEffect(() => {
     let rotates = document.getElementsByClassName('rotate');
@@ -303,7 +313,14 @@ const FullFormTable = (props) => {
             </div>
             <div>
               <Typography className={classes.borderText}>
-                দম্পতি ফরম - {unit ? '১' : '২'}
+                দম্পতি ফরম -{' '}
+                {formOption === 'জেলা'
+                  ? '৪'
+                  : formOption === 'উপজেলা'
+                  ? '৩'
+                  : formOption === 'ইউনিয়ন'
+                  ? '২'
+                  : '১'}
               </Typography>
             </div>
           </div>
@@ -313,24 +330,45 @@ const FullFormTable = (props) => {
           </Typography>
           <Typography variant='body2'>(বছরে একবার পূরণীয়)</Typography>
           <div className={classes.info}>
-            <Typography>ইউনিয়নঃ {unionName}</Typography>
-            {unit && <Typography>ইউনিটঃ {unit}</Typography>}
-            <Typography>উপজেলাঃ {upazilaName}</Typography>
-            <Typography>জেলাঃ {districtName}</Typography>
+            {formOption === 'জেলা' ? (
+              <Typography>জেলাঃ {districtName}</Typography>
+            ) : formOption === 'উপজেলা' ? (
+              <>
+                <Typography>উপজেলাঃ {upazilaName}</Typography>
+                <Typography>জেলাঃ {districtName}</Typography>
+              </>
+            ) : formOption === 'ইউনিয়ন' ? (
+              <>
+                <Typography>ইউনিয়নঃ {unionName}</Typography>
+                <Typography>উপজেলাঃ {upazilaName}</Typography>
+                <Typography>জেলাঃ {districtName}</Typography>
+              </>
+            ) : (
+              <>
+                <Typography>ইউনিটঃ {formOption}</Typography>
+                <Typography>ইউনিয়নঃ {unionName}</Typography>
+                <Typography>উপজেলাঃ {upazilaName}</Typography>
+                <Typography>জেলাঃ {districtName}</Typography>
+              </>
+            )}
             <Typography>বছরঃ {riportingYear}খ্রিঃ</Typography>
           </div>
           <div className='FullFormTable'>
             <div>
               {!stableConnection ? (
-                <Alert className={classes.alert} severity='warning'>
+                <Alert className={classes.alertText} severity='warning'>
                   ফরমের তথ্য পেতে ইন্টারনেট সংযোগ দিন
                 </Alert>
               ) : dataNull ? (
-                <Alert className={classes.alert} severity='warning'>
+                <Alert className={classes.alertText} severity='warning'>
                   {unionName.includes('এনজিও')
                     ? `${unionName} এর`
                     : `${unionName} ইউনিয়নের`}{' '}
-                  {unit && `${unit} ইউনিটের`} তথ্য খুঁজে পাওয়া যায়নি
+                  {(formOption !== 'জেলা' ||
+                    formOption !== 'উপজেলা' ||
+                    formOption !== 'ইউনিয়ন') &&
+                    `${formOption} ইউনিটের`}{' '}
+                  তথ্য খুঁজে পাওয়া যায়নি
                 </Alert>
               ) : (
                 ''
@@ -338,20 +376,9 @@ const FullFormTable = (props) => {
 
               <Table className={classes.table}>
                 <TableHead />
-                {unit ? (
-                  <TableBody>
-                    <UnitRange ageRange='<২০' rangeData={zeroRange} />
-                    <UnitRange ageRange='২০-২৯' rangeData={twentyRange} />
-                    <UnitRange ageRange='৩০-৩৯' rangeData={thirtyRange} />
-                    <UnitRange ageRange='৪০-৪৯' rangeData={fortyRange} />
-                    <UnitTotalRange
-                      zeroRange={zeroRange}
-                      twentyRange={twentyRange}
-                      thirtyRange={thirtyRange}
-                      fortyRange={fortyRange}
-                    />
-                  </TableBody>
-                ) : (
+                {formOption === 'জেলা' ||
+                formOption === 'উপজেলা' ||
+                formOption === 'ইউনিয়ন' ? (
                   <TableBody>
                     <UnionRange
                       ageRange='<২০'
@@ -376,6 +403,19 @@ const FullFormTable = (props) => {
                       fortyRange={unionFortyRange}
                     />
                   </TableBody>
+                ) : (
+                  <TableBody>
+                    <UnitRange ageRange='<২০' rangeData={zeroRange} />
+                    <UnitRange ageRange='২০-২৯' rangeData={twentyRange} />
+                    <UnitRange ageRange='৩০-৩৯' rangeData={thirtyRange} />
+                    <UnitRange ageRange='৪০-৪৯' rangeData={fortyRange} />
+                    <UnitTotalRange
+                      zeroRange={zeroRange}
+                      twentyRange={twentyRange}
+                      thirtyRange={thirtyRange}
+                      fortyRange={fortyRange}
+                    />
+                  </TableBody>
                 )}
               </Table>
               <FormFooter
@@ -383,7 +423,7 @@ const FullFormTable = (props) => {
                 upazilaName={upazilaName}
                 unionName={unionName}
                 fwaName={fwaName}
-                unit={unit}
+                formOption={formOption}
                 user={user}
               />
             </div>
@@ -396,7 +436,14 @@ const FullFormTable = (props) => {
           variant='contained'
           onClick={handleDataSubmit}
         >
-          {unit ? 'ইউনিয়নে' : 'উপজেলায়'} সাবমিট
+          {formOption == 'জেলা'
+            ? 'বিভাগে'
+            : formOption === 'উপজেলা'
+            ? 'জেলায়'
+            : formOption === 'ইউনিয়ন'
+            ? 'উপজেলায়'
+            : 'ইউনিয়নে'}{' '}
+          সাবমিট
         </Button>
         <Button
           color='primary'
@@ -407,8 +454,16 @@ const FullFormTable = (props) => {
         </Button>
       </div>
       {submitCompleted && (
-        <Alert className={classes.alert} severity='success'>
-          আপনার {unit} ইউনিটের প্রতিবেদনটি সাবমিট হয়েছে
+        <Alert className={classes.alertText} severity='success'>
+          আপনার প্রতিবেদনটি{' '}
+          {formOption == 'জেলা'
+            ? 'বিভাগে'
+            : formOption === 'উপজেলা'
+            ? 'জেলায়'
+            : formOption === 'ইউনিয়ন'
+            ? 'উপজেলায়'
+            : 'ইউনিয়নে'}{' '}
+          সাবমিট হয়েছে
         </Alert>
       )}
     </div>
