@@ -1,3 +1,13 @@
+export const redirectTo = (user) => {
+  if (user.accountType === 'ইউনিয়ন একাউন্ট') {
+    return `/${user.district}/${user.upazila}/${user.union}/edit`;
+  } else if (user.accountType === 'উপজেলা একাউন্ট') {
+    return `/${user.district}/${user.upazila}`;
+  } else if (user.accountType === 'জেলা একাউন্ট') {
+    return `/${user.district}`;
+  } else return '/';
+};
+
 const banglaToEnglish = {
   '০': 0,
   '১': 1,
@@ -35,7 +45,7 @@ function replaceToEnglish(input) {
   return output.join('');
 }
 
-function replaceToBangla(input) {
+export function replaceToBangla(input) {
   let output = [];
   for (let i = 0; i < input.length; ++i) {
     if (englishToBangla.hasOwnProperty(input[i])) {

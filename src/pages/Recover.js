@@ -15,6 +15,8 @@ import EmailField from '../components/EmailField';
 
 import StoreContext from '../store/storeContext';
 
+import { redirectTo } from '../functions';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -101,14 +103,8 @@ const Recover = () => {
       </div>
     );
 
-  if (user)
-    return (
-      <Redirect
-        to={
-          user.union ? `/${user.district}/${user.upazila}/${user.union}` : '/'
-        }
-      />
-    );
+  if (user) return <Redirect to={redirectTo(user)} />;
+
   return (
     <div className={classes.root}>
       <Card className={classes.card}>

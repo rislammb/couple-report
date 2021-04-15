@@ -20,6 +20,8 @@ import UpazilaList from '../components/createAccount/UpazilaList';
 import UnionList from '../components/createAccount/UnionList';
 import AccountType from '../components/createAccount/AccountType';
 
+import { redirectTo } from '../functions';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -131,8 +133,7 @@ const CreateAccount = () => {
       </div>
     );
 
-  if (user)
-    return <Redirect to={`/${user.district}/${user.upazila}/${user.union}`} />;
+  if (user) return <Redirect to={redirectTo(user)} />;
 
   return (
     <div className={classes.root}>

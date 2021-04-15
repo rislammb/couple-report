@@ -200,85 +200,168 @@ const FullFormTable = (props) => {
     setDataNull(false);
     setFwaName('');
     handleClear();
-    if (
-      formOption === 'জেলা' ||
-      formOption === 'উপজেলা' ||
-      formOption === 'ইউনিয়ন'
-    ) {
-      db.collection('couple-riport-2')
-        .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
-        .get()
-        .then((doc) => doc.data())
-        .then((data) => {
-          if (data) {
-            let newZeroRange = [];
-            let newTwentyRange = [];
-            let newThirtyRange = [];
-            let newFortyRange = [];
-            Object.entries(data).map((item) => {
-              newZeroRange.push(item[1].zeroRange);
-              newTwentyRange.push(item[1].twentyRange);
-              newThirtyRange.push(item[1].thirtyRange);
-              newFortyRange.push(item[1].fortyRange);
-            });
-            setUnionZeroRange(newZeroRange);
-            setUnionTwentyRange(newTwentyRange);
-            setUnionThirtyRange(newThirtyRange);
-            setUnionFortyRange(newFortyRange);
-          } else {
-            setDataNull(true);
-            setUnionZeroRange([]);
-            setUnionTwentyRange([]);
-            setUnionThirtyRange([]);
-            setUnionFortyRange([]);
-            setTimeout(() => {
-              setDataNull(false);
-            }, 4100);
-          }
-        })
-        .catch((err) => {
-          if (err.code === 'unavailable') {
-            setStableConnection(false);
-            setTimeout(() => {
-              setStableConnection(true);
-            }, 4100);
-          }
-        });
-    } else {
-      db.collection('couple-riport-1')
-        .doc(
-          `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
-        )
-        .get()
-        .then((doc) => doc.data())
-        .then((data) => {
-          if (data) {
-            if (data['<২০']) setZeroRange(data['<২০']);
-            else setZeroRange({ ...ageRangeValue });
-            if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
-            else setTwentyRange({ ...ageRangeValue });
-            if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
-            else setThirtyRange({ ...ageRangeValue });
-            if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
-            else setFortyRange({ ...ageRangeValue });
-            if (data.fwaName) setFwaName(data.fwaName);
-            else setFwaName('');
-          } else {
-            setDataNull(true);
-            handleClear();
-            setTimeout(() => {
-              setDataNull(false);
-            }, 4100);
-          }
-        })
-        .catch((err) => {
-          if (err.code === 'unavailable') {
-            setStableConnection(false);
-            setTimeout(() => {
-              setStableConnection(true);
-            }, 4100);
-          }
-        });
+
+    if (unionName) {
+      if (formOption === 'ইউনিয়ন') {
+        db.collection('couple-riport-2')
+          .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              let newZeroRange = [];
+              let newTwentyRange = [];
+              let newThirtyRange = [];
+              let newFortyRange = [];
+              Object.entries(data).map((item) => {
+                newZeroRange.push(item[1].zeroRange);
+                newTwentyRange.push(item[1].twentyRange);
+                newThirtyRange.push(item[1].thirtyRange);
+                newFortyRange.push(item[1].fortyRange);
+              });
+              setUnionZeroRange(newZeroRange);
+              setUnionTwentyRange(newTwentyRange);
+              setUnionThirtyRange(newThirtyRange);
+              setUnionFortyRange(newFortyRange);
+            } else {
+              setDataNull(true);
+              setUnionZeroRange([]);
+              setUnionTwentyRange([]);
+              setUnionThirtyRange([]);
+              setUnionFortyRange([]);
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      } else {
+        db.collection('couple-riport-1')
+          .doc(
+            `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
+          )
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              if (data['<২০']) setZeroRange(data['<২০']);
+              else setZeroRange({ ...ageRangeValue });
+              if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+              else setTwentyRange({ ...ageRangeValue });
+              if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+              else setThirtyRange({ ...ageRangeValue });
+              if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+              else setFortyRange({ ...ageRangeValue });
+              if (data.fwaName) setFwaName(data.fwaName);
+              else setFwaName('');
+            } else {
+              setDataNull(true);
+              handleClear();
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      }
+    } else if (upazilaName) {
+      if (formOption === 'উপজেলা') {
+        db.collection('couple-riport-3')
+          .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              let newZeroRange = [];
+              let newTwentyRange = [];
+              let newThirtyRange = [];
+              let newFortyRange = [];
+              Object.entries(data).map((item) => {
+                newZeroRange.push(item[1].zeroRange);
+                newTwentyRange.push(item[1].twentyRange);
+                newThirtyRange.push(item[1].thirtyRange);
+                newFortyRange.push(item[1].fortyRange);
+              });
+              setUnionZeroRange(newZeroRange);
+              setUnionTwentyRange(newTwentyRange);
+              setUnionThirtyRange(newThirtyRange);
+              setUnionFortyRange(newFortyRange);
+            } else {
+              setDataNull(true);
+              setUnionZeroRange([]);
+              setUnionTwentyRange([]);
+              setUnionThirtyRange([]);
+              setUnionFortyRange([]);
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      }
+    } else if (districtName) {
+      if (formOption === 'জেলা') {
+        db.collection('couple-riport-4')
+          .doc(`${districtName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              let newZeroRange = [];
+              let newTwentyRange = [];
+              let newThirtyRange = [];
+              let newFortyRange = [];
+              Object.entries(data).map((item) => {
+                newZeroRange.push(item[1].zeroRange);
+                newTwentyRange.push(item[1].twentyRange);
+                newThirtyRange.push(item[1].thirtyRange);
+                newFortyRange.push(item[1].fortyRange);
+              });
+              setUnionZeroRange(newZeroRange);
+              setUnionTwentyRange(newTwentyRange);
+              setUnionThirtyRange(newThirtyRange);
+              setUnionFortyRange(newFortyRange);
+            } else {
+              setDataNull(true);
+              setUnionZeroRange([]);
+              setUnionTwentyRange([]);
+              setUnionThirtyRange([]);
+              setUnionFortyRange([]);
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      }
     }
   }, [riportingYear, districtName, upazilaName, unionName, formOption]);
 
@@ -288,6 +371,36 @@ const FullFormTable = (props) => {
       rotates[i].style.height = rotates[i].offsetWidth + 50 + 'px';
     }
   }, []);
+
+  const renderAlert = () => {
+    if (unionName) {
+      if (formOption !== 'ইউনিয়ন') {
+        if (unionName.includes('এনজিও')) {
+          return `${unionName} এর ${formOption} ইউনিটের`;
+        } else {
+          return `${unionName} ইউনিয়নের ${formOption} ইউনিটের`;
+        }
+      } else {
+        if (unionName.includes('এনজিও')) {
+          return `${unionName} এর`;
+        } else {
+          return `${unionName} ইউনিয়নের`;
+        }
+      }
+    } else if (upazilaName) {
+      if (formOption !== 'উপজেলা') {
+        return `${formOption} ইউনিয়নের`;
+      } else {
+        return `${upazilaName} উপজেলার`;
+      }
+    } else if (districtName) {
+      if (formOption !== 'জেলা') {
+        return `${formOption} উপজেলার`;
+      } else {
+        return `${districtName} জেলার`;
+      }
+    }
+  };
 
   return (
     <div>
@@ -361,14 +474,7 @@ const FullFormTable = (props) => {
                 </Alert>
               ) : dataNull ? (
                 <Alert className={classes.alertText} severity='warning'>
-                  {unionName.includes('এনজিও')
-                    ? `${unionName} এর`
-                    : `${unionName} ইউনিয়নের`}{' '}
-                  {(formOption !== 'জেলা' ||
-                    formOption !== 'উপজেলা' ||
-                    formOption !== 'ইউনিয়ন') &&
-                    `${formOption} ইউনিটের`}{' '}
-                  তথ্য খুঁজে পাওয়া যায়নি
+                  {renderAlert()} তথ্য খুঁজে পাওয়া যায়নি
                 </Alert>
               ) : (
                 ''
@@ -422,9 +528,7 @@ const FullFormTable = (props) => {
                 districtName={districtName}
                 upazilaName={upazilaName}
                 unionName={unionName}
-                fwaName={fwaName}
                 formOption={formOption}
-                user={user}
               />
             </div>
           </div>
@@ -436,13 +540,15 @@ const FullFormTable = (props) => {
           variant='contained'
           onClick={handleDataSubmit}
         >
-          {formOption == 'জেলা'
-            ? 'বিভাগে'
-            : formOption === 'উপজেলা'
+          {unionName
+            ? formOption && formOption !== 'ইউনিয়ন'
+              ? 'ইউনিয়নে'
+              : 'উপজেলায়'
+            : upazilaName
             ? 'জেলায়'
-            : formOption === 'ইউনিয়ন'
-            ? 'উপজেলায়'
-            : 'ইউনিয়নে'}{' '}
+            : districtName
+            ? 'বিভাগে'
+            : ''}{' '}
           সাবমিট
         </Button>
         <Button
@@ -456,13 +562,15 @@ const FullFormTable = (props) => {
       {submitCompleted && (
         <Alert className={classes.alertText} severity='success'>
           আপনার প্রতিবেদনটি{' '}
-          {formOption == 'জেলা'
-            ? 'বিভাগে'
-            : formOption === 'উপজেলা'
+          {unionName
+            ? formOption && formOption !== 'ইউনিয়ন'
+              ? 'ইউনিয়নে'
+              : 'উপজেলায়'
+            : upazilaName
             ? 'জেলায়'
-            : formOption === 'ইউনিয়ন'
-            ? 'উপজেলায়'
-            : 'ইউনিয়নে'}{' '}
+            : districtName
+            ? 'বিভাগে'
+            : ''}{' '}
           সাবমিট হয়েছে
         </Alert>
       )}

@@ -43,40 +43,64 @@ const StoreProvider = () => {
     union
   ) => {
     const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও.${name}` : union;
-    let unionExist = false;
+    let existMessage = '';
     await db
       .collection('users')
       .get()
       .then((doc) => {
         doc.docs.forEach((doc) => {
           if (
+            accountType === 'ইউনিয়ন একাউন্ট' &&
+            doc.data().accountType === 'ইউনিয়ন একাউন্ট' &&
             doc.data().district === district &&
             doc.data().upazila === upazila &&
             doc.data().union === unionName
           ) {
-            unionExist = true;
+            existMessage = `${unionName} ইউনিয়ন এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
+          } else if (
+            accountType === 'উপজেলা একাউন্ট' &&
+            doc.data().accountType === 'উপজেলা একাউন্ট' &&
+            doc.data().district === district &&
+            doc.data().upazila === upazila
+          ) {
+            existMessage = `${upazila} উপজেলা এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
+          } else if (
+            accountType === 'জেলা একাউন্ট' &&
+            doc.data().accountType === 'জেলা একাউন্ট' &&
+            doc.data().district === district
+          ) {
+            existMessage = `${district} জেলা এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
           }
         });
       })
       .then(() => {
-        if (unionExist) {
+        if (existMessage) {
           setUserError({
-            create: `${unionName} এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`,
+            create: existMessage,
           });
         } else {
           firebase
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then(async (data) => {
-              const newUser = {
+              let newUser = {
                 uid: data.user.uid,
                 accountType,
                 name,
                 email,
-                district,
-                upazila,
-                union: unionName,
               };
+
+              if (accountType === 'ইউনিয়ন একাউন্ট') {
+                newUser.district = district;
+                newUser.upazila = upazila;
+                newUser.union = unionName;
+              } else if (accountType === 'উপজেলা একাউন্ট') {
+                newUser.district = district;
+                newUser.upazila = upazila;
+              } else if (accountType === 'জেলা একাউন্ট') {
+                newUser.district = district;
+              }
+
               await db
                 .collection('users')
                 .doc(data.user.uid)

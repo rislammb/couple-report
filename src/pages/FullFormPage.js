@@ -30,12 +30,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PrintPage = (props) => {
+const FullFormPage = (props) => {
   const { districtName, upazilaName, unionName } = props.match.params;
   const { user, authLoading } = useContext(StoreContext);
   const classes = useStyles();
   const [riportingYear, setRiportingYear] = useState(getYear());
-  const [formOption, setFormOption] = useState('ইউনিয়ন');
+  const [formOption, setFormOption] = useState(
+    unionName ? 'ইউনিয়ন' : upazilaName ? 'উপজেলা' : districtName ? 'জেলা' : ''
+  );
 
   if (authLoading)
     return (
@@ -51,6 +53,9 @@ const PrintPage = (props) => {
           setRiportingYear={setRiportingYear}
           formOption={formOption}
           setFormOption={setFormOption}
+          districtName={districtName}
+          upazilaName={upazilaName}
+          unionName={unionName}
         />
         <FullFormTable
           riportingYear={riportingYear}
@@ -75,4 +80,4 @@ const PrintPage = (props) => {
     );
 };
 
-export default PrintPage;
+export default FullFormPage;

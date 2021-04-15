@@ -19,14 +19,20 @@ const Content = () => {
       <Route exact path='/recover' component={Recover} />
       <Route
         exact
-        path='/:districtName/:upazilaName/:unionName'
+        path='/:districtName/:upazilaName/:unionName/edit'
         component={CoupleForm}
       />
       <Route
         exact
-        path='/:districtName/:upazilaName/:unionName/fullForm'
+        path='/:districtName/:upazilaName/:unionName'
         component={FullFormPage}
       />
+      <Route
+        exact
+        path='/:districtName/:upazilaName'
+        component={FullFormPage}
+      />
+      <Route exact path='/:districtName' component={FullFormPage} />
     </Switch>
   );
 };

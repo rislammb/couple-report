@@ -26,6 +26,16 @@ const DrawerList = ({ closeDrawer }) => {
   const theme = useTheme();
   const { user, logoutUser } = useContext(StoreContext);
 
+  const navlinkTo = () => {
+    if (user.accountType === 'ইউনিয়ন একাউন্ট') {
+      return `/${user.district}/${user.upazila}/${user.union}`;
+    } else if (user.accountType === 'উপজেলা একাউন্ট') {
+      return `/${user.district}/${user.upazila}`;
+    } else if (user.accountType === 'জেলা একাউন্ট') {
+      return `/${user.district}`;
+    }
+  };
+
   const logoutHandler = () => {
     if (user) {
       closeDrawer();
@@ -56,12 +66,12 @@ const DrawerList = ({ closeDrawer }) => {
             <ListItemText primary='হোম' />
           </ListItem>
         </NavLink>
-        {user && (
+        {user?.accountType === 'ইউনিয়ন একাউন্ট' && (
           <NavLink
             exact
             to={
               user
-                ? `/${user.district}/${user.upazila}/${user.union}`
+                ? `/${user.district}/${user.upazila}/${user.union}/edit`
                 : '/login'
             }
             onClick={closeDrawer}
@@ -81,11 +91,7 @@ const DrawerList = ({ closeDrawer }) => {
         {user && (
           <NavLink
             exact
-            to={
-              user
-                ? `/${user.district}/${user.upazila}/${user.union}/fullForm`
-                : '/login'
-            }
+            to={user ? navlinkTo() : '/login'}
             onClick={closeDrawer}
             activeStyle={{
               color: theme.palette.type === 'dark' ? 'lightgreen' : 'green',

@@ -15,14 +15,7 @@ const useStyles = makeStyles({
   date: { flex: 1, textAlign: 'left' },
 });
 
-const FormFooter = ({
-  districtName,
-  upazilaName,
-  unionName,
-  fwaName,
-  formOption,
-  user,
-}) => {
+const FormFooter = ({ districtName, upazilaName, unionName, formOption }) => {
   const classes = useStyles();
 
   return (
@@ -33,43 +26,47 @@ const FormFooter = ({
       <br />
       <div className={classes.footerTextContainer}>
         <Typography className={classes.date}>তারিখঃ</Typography>
-        {unionName.includes('এনজিও') ? (
-          <div>
-            <Typography>{unionName}</Typography>
-            <Typography>
-              {upazilaName}, {districtName}।
-            </Typography>
-          </div>
-        ) : formOption === 'জেলা' ? (
-          <div>
-            <Typography>উপ-পরিচালক</Typography>
-            <Typography>{districtName} জেলা।</Typography>
-          </div>
-        ) : formOption === 'উপজেলা' ? (
-          <div>
-            <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
-            <Typography>
-              {upazilaName}, {districtName}।
-            </Typography>
-          </div>
-        ) : formOption === 'ইউনিয়ন' ? (
-          <div>
-            <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
-            <Typography>{unionName} ইউনিয়ন</Typography>
-            <Typography>
-              {upazilaName}, {districtName}।
-            </Typography>
-          </div>
+        {formOption ? (
+          unionName?.includes('এনজিও') ? (
+            <div>
+              <Typography>{unionName}</Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          ) : formOption === 'জেলা' ? (
+            <div>
+              <Typography>উপ-পরিচালক</Typography>
+              <Typography>{districtName} জেলা।</Typography>
+            </div>
+          ) : formOption === 'উপজেলা' ? (
+            <div>
+              <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          ) : formOption === 'ইউনিয়ন' ? (
+            <div>
+              <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
+              <Typography>{unionName} ইউনিয়ন</Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          ) : (
+            <div>
+              <Typography>পরিবার কলাণ সহকারী</Typography>
+              <Typography>
+                {formOption} ইউনিট, {unionName} ইউনিয়ন
+              </Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          )
         ) : (
-          <div>
-            <Typography>পরিবার কলাণ সহকারী</Typography>
-            <Typography>
-              {formOption} ইউনিট, {unionName} ইউনিয়ন
-            </Typography>
-            <Typography>
-              {upazilaName}, {districtName}।
-            </Typography>
-          </div>
+          ''
         )}
       </div>
     </div>
