@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import StoreContext from '../store/storeContext';
+import { redirectTo } from '../functions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,11 +68,7 @@ const Home = () => {
             ) : (
               <Link
                 className={classes.link}
-                to={
-                  user
-                    ? `/${user.district}/${user.upazila}/${user.union}`
-                    : '/login'
-                }
+                to={user ? redirectTo(user) : '/login'}
               >
                 {user ? 'ফরমে যান' : 'লগইন করুন'}
               </Link>

@@ -1,3 +1,5 @@
+import { rowValue } from './data';
+
 export const redirectTo = (user) => {
   if (user.accountType === 'ইউনিয়ন একাউন্ট') {
     return `/${user.district}/${user.upazila}/${user.union}/edit`;
@@ -77,3 +79,106 @@ export const getTotalFromArray = (array) => {
 
 export const getYear = () =>
   replaceToBangla(new Date().getFullYear().toString());
+
+const ageRangeValue = {
+  rowOne: { ...rowValue },
+  rowTwo: { ...rowValue },
+  rowThree: { ...rowValue },
+  rowFour: { ...rowValue },
+};
+
+export const rangeDataFromDB = (rangeData) => {
+  let rangeValue = { ...ageRangeValue };
+  const cellTotalFromRow = (rowName, name) =>
+    rangeData.map((unit) => unit[rowName][name]);
+
+  rangeValue.rowOne = {
+    a: getTotalFromArray(cellTotalFromRow('rowOne', 'a')),
+    b: getTotalFromArray(cellTotalFromRow('rowOne', 'b')),
+    c: getTotalFromArray(cellTotalFromRow('rowOne', 'c')),
+    d: getTotalFromArray(cellTotalFromRow('rowOne', 'd')),
+    e: getTotalFromArray(cellTotalFromRow('rowOne', 'e')),
+    f: getTotalFromArray(cellTotalFromRow('rowOne', 'f')),
+    g: getTotalFromArray(cellTotalFromRow('rowOne', 'g')),
+    h: getTotalFromArray(cellTotalFromRow('rowOne', 'h')),
+    i: getTotalFromArray(cellTotalFromRow('rowOne', 'i')),
+    j: getTotalFromArray(cellTotalFromRow('rowOne', 'j')),
+    k: getTotalFromArray(cellTotalFromRow('rowOne', 'k')),
+    l: getTotalFromArray(cellTotalFromRow('rowOne', 'l')),
+    m: getTotalFromArray(cellTotalFromRow('rowOne', 'm')),
+    n: getTotalFromArray(cellTotalFromRow('rowOne', 'n')),
+    o: getTotalFromArray(cellTotalFromRow('rowOne', 'o')),
+    p: getTotalFromArray(cellTotalFromRow('rowOne', 'p')),
+    q: getTotalFromArray(cellTotalFromRow('rowOne', 'q')),
+    r: getTotalFromArray(cellTotalFromRow('rowOne', 'r')),
+    s: getTotalFromArray(cellTotalFromRow('rowOne', 's')),
+  };
+
+  rangeValue.rowTwo = {
+    a: getTotalFromArray(cellTotalFromRow('rowTwo', 'a')),
+    b: getTotalFromArray(cellTotalFromRow('rowTwo', 'b')),
+    c: getTotalFromArray(cellTotalFromRow('rowTwo', 'c')),
+    d: getTotalFromArray(cellTotalFromRow('rowTwo', 'd')),
+    e: getTotalFromArray(cellTotalFromRow('rowTwo', 'e')),
+    f: getTotalFromArray(cellTotalFromRow('rowTwo', 'f')),
+    g: getTotalFromArray(cellTotalFromRow('rowTwo', 'g')),
+    h: getTotalFromArray(cellTotalFromRow('rowTwo', 'h')),
+    i: getTotalFromArray(cellTotalFromRow('rowTwo', 'i')),
+    j: getTotalFromArray(cellTotalFromRow('rowTwo', 'j')),
+    k: getTotalFromArray(cellTotalFromRow('rowTwo', 'k')),
+    l: getTotalFromArray(cellTotalFromRow('rowTwo', 'l')),
+    m: getTotalFromArray(cellTotalFromRow('rowTwo', 'm')),
+    n: getTotalFromArray(cellTotalFromRow('rowTwo', 'n')),
+    o: getTotalFromArray(cellTotalFromRow('rowTwo', 'o')),
+    p: getTotalFromArray(cellTotalFromRow('rowTwo', 'p')),
+    q: getTotalFromArray(cellTotalFromRow('rowTwo', 'q')),
+    r: getTotalFromArray(cellTotalFromRow('rowTwo', 'r')),
+    s: getTotalFromArray(cellTotalFromRow('rowTwo', 's')),
+  };
+
+  rangeValue.rowThree = {
+    a: getTotalFromArray(cellTotalFromRow('rowThree', 'a')),
+    b: getTotalFromArray(cellTotalFromRow('rowThree', 'b')),
+    c: getTotalFromArray(cellTotalFromRow('rowThree', 'c')),
+    d: getTotalFromArray(cellTotalFromRow('rowThree', 'd')),
+    e: getTotalFromArray(cellTotalFromRow('rowThree', 'e')),
+    f: getTotalFromArray(cellTotalFromRow('rowThree', 'f')),
+    g: getTotalFromArray(cellTotalFromRow('rowThree', 'g')),
+    h: getTotalFromArray(cellTotalFromRow('rowThree', 'h')),
+    i: getTotalFromArray(cellTotalFromRow('rowThree', 'i')),
+    j: getTotalFromArray(cellTotalFromRow('rowThree', 'j')),
+    k: getTotalFromArray(cellTotalFromRow('rowThree', 'k')),
+    l: getTotalFromArray(cellTotalFromRow('rowThree', 'l')),
+    m: getTotalFromArray(cellTotalFromRow('rowThree', 'm')),
+    n: getTotalFromArray(cellTotalFromRow('rowThree', 'n')),
+    o: getTotalFromArray(cellTotalFromRow('rowThree', 'o')),
+    p: getTotalFromArray(cellTotalFromRow('rowThree', 'p')),
+    q: getTotalFromArray(cellTotalFromRow('rowThree', 'q')),
+    r: getTotalFromArray(cellTotalFromRow('rowThree', 'r')),
+    s: getTotalFromArray(cellTotalFromRow('rowThree', 's')),
+  };
+
+  rangeValue.rowFour = {
+    a: getTotalFromArray(cellTotalFromRow('rowFour', 'a')),
+    b: getTotalFromArray(cellTotalFromRow('rowFour', 'b')),
+    c: getTotalFromArray(cellTotalFromRow('rowFour', 'c')),
+    d: getTotalFromArray(cellTotalFromRow('rowFour', 'd')),
+    e: getTotalFromArray(cellTotalFromRow('rowFour', 'e')),
+    f: getTotalFromArray(cellTotalFromRow('rowFour', 'f')),
+    g: getTotalFromArray(cellTotalFromRow('rowFour', 'g')),
+    h: getTotalFromArray(cellTotalFromRow('rowFour', 'h')),
+    i: getTotalFromArray(cellTotalFromRow('rowFour', 'i')),
+    j: getTotalFromArray(cellTotalFromRow('rowFour', 'j')),
+    k: getTotalFromArray(cellTotalFromRow('rowFour', 'k')),
+    l: getTotalFromArray(cellTotalFromRow('rowFour', 'l')),
+    m: getTotalFromArray(cellTotalFromRow('rowFour', 'm')),
+    n: getTotalFromArray(cellTotalFromRow('rowFour', 'n')),
+    o: getTotalFromArray(cellTotalFromRow('rowFour', 'o')),
+    p: getTotalFromArray(cellTotalFromRow('rowFour', 'p')),
+    q: getTotalFromArray(cellTotalFromRow('rowFour', 'q')),
+    r: getTotalFromArray(cellTotalFromRow('rowFour', 'r')),
+    s: getTotalFromArray(cellTotalFromRow('rowFour', 's')),
+  };
+
+  return rangeValue;
+};

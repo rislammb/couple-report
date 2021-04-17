@@ -43,7 +43,7 @@ const LoadRiportForm = (props) => {
     unionName,
   } = props;
   const classes = useStyles();
-  const [submittedNumber, setSubmittedNumber] = useState('');
+  const [submittedNumber, setSubmittedNumber] = useState('০');
 
   useEffect(() => {
     if (unionName) {
@@ -52,7 +52,10 @@ const LoadRiportForm = (props) => {
         .get()
         .then((doc) => {
           let dataObj = doc.data();
-          setSubmittedNumber(replaceToBangla(`${Object.keys(dataObj).length}`));
+          dataObj &&
+            setSubmittedNumber(
+              replaceToBangla(`${Object.keys(dataObj).length}`)
+            );
         });
       return '';
     } else if (upazilaName) {

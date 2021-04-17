@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { Mail, AccountCircle, Home } from '@material-ui/icons';
+import { Home, Assignment, Mail, AccountCircle } from '@material-ui/icons';
 
 import StoreContext from '../store/storeContext';
 
@@ -82,7 +82,7 @@ const DrawerList = ({ closeDrawer }) => {
           >
             <ListItem button>
               <ListItemIcon>
-                <Mail />
+                <Assignment />
               </ListItemIcon>
               <ListItemText primary='দম্পতি ফরম' />
             </ListItem>
@@ -100,9 +100,9 @@ const DrawerList = ({ closeDrawer }) => {
           >
             <ListItem button>
               <ListItemIcon>
-                <Mail />
+                <Assignment />
               </ListItemIcon>
-              <ListItemText primary='সম্পূর্ণ ফরম' />
+              <ListItemText primary='সম্পূর্ণ প্রতিবেদন' />
             </ListItem>
           </NavLink>
         )}

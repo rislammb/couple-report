@@ -84,7 +84,6 @@ const CoupleForm = (props) => {
   const classes = useStyles();
   const { user, authLoading } = useContext(StoreContext);
 
-  // const [rowOne, setRowOne] = useState({ ...rowOneValue });
   const [rowOne, setRowOne] = useState({ ...rowValue });
   const [rowTwo, setRowTwo] = useState({ ...rowValue });
   const [rowThree, setRowThree] = useState({ ...rowValue });
@@ -96,6 +95,7 @@ const CoupleForm = (props) => {
   const [ageRange, setAgeRange] = useState('<২০');
   const [submitingData, setSubmitingData] = useState(false);
   const [saveCompleted, setSaveCompleted] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   useEffect(() => {
     setRowOne((prev) => {
@@ -231,6 +231,13 @@ const CoupleForm = (props) => {
               .update({
                 fwaName,
                 [ageRange]: { rowOne, rowTwo, rowThree, rowFour },
+              })
+              .catch((err) => {
+                setSubmitingData(false);
+                setSaveError(true);
+                setTimeout(() => {
+                  setSaveError(false);
+                }, 4100);
               });
           } else {
             return db
@@ -248,15 +255,18 @@ const CoupleForm = (props) => {
           }
         })
         .then(() => {
-          setSaveCompleted(true);
           setSubmitingData(false);
+          setSaveCompleted(true);
           setTimeout(() => {
             setSaveCompleted(false);
           }, 4100);
         })
         .catch((err) => {
-          console.log('Data saved Faild!', err);
           setSubmitingData(false);
+          setSaveError(true);
+          setTimeout(() => {
+            setSaveError(false);
+          }, 4100);
         });
     } else {
       setSubmitingData(false);
@@ -303,6 +313,11 @@ const CoupleForm = (props) => {
           {saveCompleted && (
             <Alert className={classes.alert} severity='success'>
               আপনার তথ্য সংরক্ষণ হয়েছে
+            </Alert>
+          )}
+          {saveError && (
+            <Alert className={classes.alert} severity='error'>
+              সংরক্ষণ সম্ভব হয়নি, আবার চেষ্টা করুন
             </Alert>
           )}
           <div className={classes.topContainer}>
