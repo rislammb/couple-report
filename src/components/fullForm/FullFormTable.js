@@ -129,11 +129,58 @@ const FullFormTable = (props) => {
         upazilaName === user.upazila &&
         unionName === user.union
       ) {
-        if (
-          formOption !== 'জেলা' &&
-          formOption !== 'উপজেলা' &&
-          formOption !== 'ইউনিয়ন'
-        ) {
+        if (formOption === 'ইউনিয়ন') {
+          // start union
+
+          if (
+            window.confirm(
+              `আপনি কি ${unionName} ইউনিয়নের প্রতিবেদনটি সাবমিট করতে চান?`
+            )
+          ) {
+            const dataToSubmit = {
+              riportingYear,
+              districtName,
+              upazilaName,
+              unionName,
+              zeroRange,
+              twentyRange,
+              thirtyRange,
+              fortyRange,
+            };
+
+            return db
+              .collection('couple-riport-3')
+              .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  return db
+                    .collection('couple-riport-3')
+                    .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+                    .update({
+                      [unionName]: dataToSubmit,
+                    })
+                    .catch((err) => console.log('riport submitted err', err));
+                } else {
+                  return db
+                    .collection('couple-riport-3')
+                    .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+                    .set({
+                      [unionName]: dataToSubmit,
+                    })
+                    .catch((err) => console.log('riport submitted err', err));
+                }
+              })
+              .then(() => {
+                setSubmitCompleted(true);
+                setTimeout(() => {
+                  setSubmitCompleted(false);
+                }, 4100);
+              });
+          }
+
+          // end union
+        } else {
           // start unit
 
           if (
@@ -191,57 +238,6 @@ const FullFormTable = (props) => {
           }
 
           // end unit
-        } else if (formOption === 'ইউনিয়ন') {
-          // start union
-
-          if (
-            window.confirm(
-              `আপনি কি ${unionName} ইউনিয়নের প্রতিবেদনটি সাবমিট করতে চান?`
-            )
-          ) {
-            const dataToSubmit = {
-              riportingYear,
-              districtName,
-              upazilaName,
-              unionName,
-              zeroRange,
-              twentyRange,
-              thirtyRange,
-              fortyRange,
-            };
-
-            return db
-              .collection('couple-riport-3')
-              .doc(`${districtName}.${upazilaName}.${riportingYear}`)
-              .get()
-              .then((doc) => {
-                if (doc.exists) {
-                  return db
-                    .collection('couple-riport-3')
-                    .doc(`${districtName}.${upazilaName}.${riportingYear}`)
-                    .update({
-                      [unionName]: dataToSubmit,
-                    })
-                    .catch((err) => console.log('riport submitted err', err));
-                } else {
-                  return db
-                    .collection('couple-riport-3')
-                    .doc(`${districtName}.${upazilaName}.${riportingYear}`)
-                    .set({
-                      [unionName]: dataToSubmit,
-                    })
-                    .catch((err) => console.log('riport submitted err', err));
-                }
-              })
-              .then(() => {
-                setSubmitCompleted(true);
-                setTimeout(() => {
-                  setSubmitCompleted(false);
-                }, 4100);
-              });
-          }
-
-          // end union
         }
       } else {
         alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
@@ -302,7 +298,7 @@ const FullFormTable = (props) => {
           }
 
           // end upazila
-        }
+        } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
       } else {
         alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
       }
@@ -312,11 +308,9 @@ const FullFormTable = (props) => {
         districtName === user.district
       ) {
         if (formOption === 'জেলা') {
-          console.log('submit for zila');
-        }
-      } else {
-        alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
-      }
+          alert('জেলার তথ্য সাবমিটের ব্যবস্থা প্রয়োজনে পরে করা হবে');
+        } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+      } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
     }
   };
 
@@ -438,6 +432,33 @@ const FullFormTable = (props) => {
               }, 4100);
             }
           });
+      } else {
+        db.collection('couple-riport-3')
+          .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              setZeroRange(data[formOption].zeroRange);
+              setTwentyRange(data[formOption].twentyRange);
+              setThirtyRange(data[formOption].thirtyRange);
+              setFortyRange(data[formOption].fortyRange);
+            } else {
+              setDataNull(true);
+              handleClear();
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
       }
     } else if (districtName) {
       if (formOption === 'জেলা') {
@@ -477,9 +498,62 @@ const FullFormTable = (props) => {
               }, 4100);
             }
           });
+      } else {
+        db.collection('couple-riport-4')
+          .doc(`${districtName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              setZeroRange(data[formOption].zeroRange);
+              setTwentyRange(data[formOption].twentyRange);
+              setThirtyRange(data[formOption].thirtyRange);
+              setFortyRange(data[formOption].fortyRange);
+            } else {
+              setDataNull(true);
+              handleClear();
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
       }
     }
   }, [riportingYear, districtName, upazilaName, unionName, formOption]);
+
+  const getFormNumber = () => {
+    if (unionName) {
+      if (formOption === 'ইউনিয়ন') return '২';
+      else return '১';
+    } else if (upazilaName) {
+      if (formOption === 'উপজেলা') return '৩';
+      else return '২';
+    } else if (districtName) {
+      if (formOption === 'জেলা') return '৪';
+      else return '৩';
+    } else return '';
+  };
+
+  const getSubmitText = () => {
+    if (unionName) {
+      if (formOption === 'ইউনিয়ন') return 'উপজেলায়';
+      else return 'ইউনিয়নে';
+    } else if (upazilaName) {
+      if (formOption === 'উপজেলা') return 'জেলায়';
+      else return 'উপজেলায়';
+    } else if (districtName) {
+      if (formOption === 'জেলা') return 'বিভাগে';
+      else return 'জেলায়';
+    } else return '';
+  };
 
   useEffect(() => {
     let rotates = document.getElementsByClassName('rotate');
@@ -542,14 +616,7 @@ const FullFormTable = (props) => {
             </div>
             <div>
               <Typography className={classes.borderText}>
-                দম্পতি ফরম -{' '}
-                {formOption === 'জেলা'
-                  ? '৪'
-                  : formOption === 'উপজেলা'
-                  ? '৩'
-                  : formOption === 'ইউনিয়ন'
-                  ? '২'
-                  : '১'}
+                দম্পতি ফরম - {getFormNumber()}
               </Typography>
             </div>
           </div>
@@ -627,16 +694,7 @@ const FullFormTable = (props) => {
           variant='contained'
           onClick={handleDataSubmit}
         >
-          {unionName
-            ? formOption && formOption !== 'ইউনিয়ন'
-              ? 'ইউনিয়নে'
-              : 'উপজেলায়'
-            : upazilaName
-            ? 'জেলায়'
-            : districtName
-            ? 'বিভাগে'
-            : ''}{' '}
-          সাবমিট
+          {getSubmitText()} সাবমিট
         </Button>
         <Button
           color='primary'

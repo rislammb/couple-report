@@ -4,7 +4,6 @@ import UnitRow from './UnitRow';
 import TotalRow from '../TotalRow';
 
 const UnitRange = ({ ageRange, rangeData }) => {
-  console.log('unit range');
   return (
     <>
       <UnitRow

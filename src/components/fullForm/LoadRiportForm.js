@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 7,
   },
   formControl: {
-    minWidth: 117,
+    minWidth: 137,
   },
 }));
 
@@ -43,11 +43,13 @@ const LoadRiportForm = (props) => {
     unionName,
   } = props;
   const classes = useStyles();
+  const [listItems, setListItems] = useState([]);
   const [submittedNumber, setSubmittedNumber] = useState('০');
 
   useEffect(() => {
     if (unionName) {
-      db.collection('couple-riport-2')
+      return db
+        .collection('couple-riport-2')
         .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
         .get()
         .then((doc) => {
@@ -57,9 +59,34 @@ const LoadRiportForm = (props) => {
               replaceToBangla(`${Object.keys(dataObj).length}`)
             );
         });
-      return '';
     } else if (upazilaName) {
+      return db
+        .collection('couple-riport-3')
+        .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+        .get()
+        .then((doc) => {
+          let dataObj = doc.data();
+          if (dataObj) {
+            setSubmittedNumber(
+              replaceToBangla(`${Object.keys(dataObj).length}`)
+            );
+            setListItems(Object.keys(dataObj));
+          }
+        });
     } else if (districtName) {
+      return db
+        .collection('couple-riport-4')
+        .doc(`${districtName}.${riportingYear}`)
+        .get()
+        .then((doc) => {
+          let dataObj = doc.data();
+          if (dataObj) {
+            setSubmittedNumber(
+              replaceToBangla(`${Object.keys(dataObj).length}`)
+            );
+            setListItems(Object.keys(dataObj));
+          }
+        });
     }
   }, [formOption, unionName, upazilaName, districtName]);
 
@@ -99,6 +126,12 @@ const LoadRiportForm = (props) => {
               onChange={(e) => setFormOption(e.target.value)}
             >
               <MenuItem value='উপজেলা'>উপজেলা</MenuItem>
+              {listItems &&
+                listItems.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
             </Select>
           ) : districtName ? (
             <Select
@@ -108,6 +141,12 @@ const LoadRiportForm = (props) => {
               onChange={(e) => setFormOption(e.target.value)}
             >
               <MenuItem value='জেলা'>জেলা</MenuItem>
+              {listItems &&
+                listItems.map((item) => (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                ))}
             </Select>
           ) : (
             ''
@@ -117,6 +156,16 @@ const LoadRiportForm = (props) => {
       {formOption === 'ইউনিয়ন' && (
         <Typography color='secondary' style={{ textAlign: 'center' }}>
           {submittedNumber}টি ইউনিটের রিপোর্ট সাবমিট হয়েছে
+        </Typography>
+      )}
+      {formOption === 'উপজেলা' && (
+        <Typography color='secondary' style={{ textAlign: 'center' }}>
+          {submittedNumber}টি ইউনিয়নের রিপোর্ট সাবমিট হয়েছে
+        </Typography>
+      )}
+      {formOption === 'জেলা' && (
+        <Typography color='secondary' style={{ textAlign: 'center' }}>
+          {submittedNumber}টি উপজেলার রিপোর্ট সাবমিট হয়েছে
         </Typography>
       )}
     </div>
