@@ -35,9 +35,7 @@ const FullFormPage = (props) => {
   const { user, authLoading } = useContext(StoreContext);
   const classes = useStyles();
   const [riportingYear, setRiportingYear] = useState(getYear());
-  const [formOption, setFormOption] = useState(
-    unionName ? 'ইউনিয়ন' : upazilaName ? 'উপজেলা' : districtName ? 'জেলা' : ''
-  );
+  const [formOption, setFormOption] = useState('');
 
   if (authLoading)
     return (

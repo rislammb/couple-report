@@ -182,3 +182,88 @@ export const rangeDataFromDB = (rangeData) => {
 
   return rangeValue;
 };
+
+export const renderAlert = (
+  unionName,
+  upazilaName,
+  districtName,
+  formOption
+) => {
+  if (unionName) {
+    if (formOption !== 'ইউনিয়ন') {
+      if (unionName.includes('এনজিও')) {
+        return `${unionName} এর ${formOption} ইউনিটের`;
+      } else {
+        return `${unionName} ইউনিয়নের ${formOption} ইউনিটের`;
+      }
+    } else {
+      if (unionName.includes('এনজিও')) {
+        return `${unionName} এর`;
+      } else {
+        return `${unionName} ইউনিয়নের`;
+      }
+    }
+  } else if (upazilaName) {
+    if (formOption !== 'উপজেলা') {
+      return `${formOption} ইউনিয়নের`;
+    } else {
+      return `${upazilaName} উপজেলার`;
+    }
+  } else if (districtName) {
+    if (formOption !== 'জেলা') {
+      return `${formOption} উপজেলার`;
+    } else {
+      return `${districtName} জেলার`;
+    }
+  }
+};
+
+export const getFormNumber = (
+  unionName,
+  upazilaName,
+  districtName,
+  formOption
+) => {
+  if (unionName) {
+    if (formOption === 'ইউনিয়ন') return '২';
+    else return '১';
+  } else if (upazilaName) {
+    if (formOption === 'উপজেলা') return '৩';
+    else return '২';
+  } else if (districtName) {
+    if (formOption === 'জেলা') return '৪';
+    else return '৩';
+  } else return '';
+};
+
+export const getSubmitText = (
+  unionName,
+  upazilaName,
+  districtName,
+  formOption
+) => {
+  if (unionName) {
+    if (formOption === 'ইউনিয়ন') return 'উপজেলায় সাবমিট';
+    else return 'ইউনিয়নে সাবমিট';
+  } else if (upazilaName) {
+    if (formOption === 'উপজেলা') return 'জেলায় সাবমিট';
+    else return 'ডিলিট করুন';
+  } else if (districtName) {
+    if (formOption === 'জেলা') return 'বিভাগে সাবমিট';
+    else return 'ডিলিট করুন';
+  } else return '';
+};
+
+export const getCompletedText = (
+  unionName,
+  upazilaName,
+  districtName,
+  formOption
+) => {
+  if (unionName) {
+    if (formOption && formOption !== 'ইউনিয়ন') return 'ইউনিয়নে';
+    else return 'উপজেলায়';
+  } else if (upazilaName) return 'জেলায়';
+  else if (districtName) return 'বিভাগে';
+  else return '';
+};

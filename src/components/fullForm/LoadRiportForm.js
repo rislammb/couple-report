@@ -47,6 +47,14 @@ const LoadRiportForm = (props) => {
   const [submittedNumber, setSubmittedNumber] = useState('০');
 
   useEffect(() => {
+    setFormOption('');
+    if (unionName) setFormOption('ইউনিয়ন');
+    else if (upazilaName) setFormOption('উপজেলা');
+    else if (districtName) setFormOption('জেলা');
+    else setFormOption('');
+  }, [unionName, upazilaName, districtName]);
+
+  useEffect(() => {
     if (unionName) {
       return db
         .collection('couple-riport-2')
@@ -67,10 +75,12 @@ const LoadRiportForm = (props) => {
         .then((doc) => {
           let dataObj = doc.data();
           if (dataObj) {
-            setSubmittedNumber(
-              replaceToBangla(`${Object.keys(dataObj).length}`)
-            );
-            setListItems(Object.keys(dataObj));
+            let tempItems = [];
+            Object.entries(dataObj).map((item) => {
+              if (item[1] !== null) return tempItems.push(item[0]);
+            });
+            setListItems(tempItems);
+            setSubmittedNumber(replaceToBangla(`${tempItems.length}`));
           }
         });
     } else if (districtName) {
@@ -81,10 +91,12 @@ const LoadRiportForm = (props) => {
         .then((doc) => {
           let dataObj = doc.data();
           if (dataObj) {
-            setSubmittedNumber(
-              replaceToBangla(`${Object.keys(dataObj).length}`)
-            );
-            setListItems(Object.keys(dataObj));
+            let tempItems = [];
+            Object.entries(dataObj).map((item) => {
+              if (item[1] !== null) return tempItems.push(item[0]);
+            });
+            setListItems(tempItems);
+            setSubmittedNumber(replaceToBangla(`${tempItems.length}`));
           }
         });
     }

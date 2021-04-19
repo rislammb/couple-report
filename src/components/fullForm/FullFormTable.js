@@ -13,7 +13,13 @@ import FormFooter from './FormFooter';
 import { db } from '../../store/storeProvider';
 
 import { rowValue } from '../../data';
-import { rangeDataFromDB } from '../../functions';
+import {
+  rangeDataFromDB,
+  renderAlert,
+  getFormNumber,
+  getSubmitText,
+  getCompletedText,
+} from '../../functions';
 
 const useStyles = makeStyles({
   printContainer: {
@@ -110,7 +116,9 @@ const FullFormTable = (props) => {
   const [thirtyRange, setThirtyRange] = useState({ ...ageRangeValue });
   const [fortyRange, setFortyRange] = useState({ ...ageRangeValue });
 
+  const [isBtnDisable, setIsBtnDisable] = useState(false);
   const [submitCompleted, setSubmitCompleted] = useState(false);
+  const [deleteCompleted, setDeleteCompleted] = useState(false);
 
   const handleClear = () => {
     setZeroRange({ ...ageRangeValue });
@@ -173,6 +181,7 @@ const FullFormTable = (props) => {
               })
               .then(() => {
                 setSubmitCompleted(true);
+                setIsBtnDisable(true);
                 setTimeout(() => {
                   setSubmitCompleted(false);
                 }, 4100);
@@ -291,6 +300,7 @@ const FullFormTable = (props) => {
               })
               .then(() => {
                 setSubmitCompleted(true);
+                setIsBtnDisable(true);
                 setTimeout(() => {
                   setSubmitCompleted(false);
                 }, 4100);
@@ -298,7 +308,27 @@ const FullFormTable = (props) => {
           }
 
           // end upazila
-        } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+        } else {
+          if (
+            window.confirm(
+              `আপনি কি ${formOption} ইউনিয়নের প্রতিবেদনটি ডিলিট করতে চান?`
+            )
+          ) {
+            return db
+              .collection('couple-riport-3')
+              .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+              .update({
+                [formOption]: null,
+              })
+              .then(() => {
+                setDeleteCompleted(true);
+                handleClear();
+                setTimeout(() => {
+                  setDeleteCompleted(false);
+                }, 4100);
+              });
+          }
+        }
       } else {
         alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
       }
@@ -309,7 +339,27 @@ const FullFormTable = (props) => {
       ) {
         if (formOption === 'জেলা') {
           alert('জেলার তথ্য সাবমিটের ব্যবস্থা প্রয়োজনে পরে করা হবে');
-        } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+        } else {
+          if (
+            window.confirm(
+              `আপনি কি ${formOption} উপজেলার প্রতিবেদনটি ডিলিট করতে চান?`
+            )
+          ) {
+            return db
+              .collection('couple-riport-4')
+              .doc(`${districtName}.${riportingYear}`)
+              .update({
+                [formOption]: null,
+              })
+              .then(() => {
+                setDeleteCompleted(true);
+                handleClear();
+                setTimeout(() => {
+                  setDeleteCompleted(false);
+                }, 4100);
+              });
+          }
+        }
       } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
     }
   };
@@ -320,7 +370,47 @@ const FullFormTable = (props) => {
     handleClear();
 
     if (unionName) {
-      if (formOption === 'ইউনিয়ন') {
+      if (
+        formOption != 'ইউনিয়ন' &&
+        formOption != 'উপজেলা' &&
+        formOption != 'জেলা' &&
+        formOption != ''
+      ) {
+        db.collection('couple-riport-1')
+          .doc(
+            `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
+          )
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              if (data['<২০']) setZeroRange(data['<২০']);
+              else setZeroRange({ ...ageRangeValue });
+              if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+              else setTwentyRange({ ...ageRangeValue });
+              if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+              else setThirtyRange({ ...ageRangeValue });
+              if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+              else setFortyRange({ ...ageRangeValue });
+              if (data.fwaName) setFwaName(data.fwaName);
+              else setFwaName('');
+            } else {
+              setDataNull(true);
+              handleClear();
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      } else {
         db.collection('couple-riport-2')
           .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
           .get()
@@ -358,41 +448,6 @@ const FullFormTable = (props) => {
               }, 4100);
             }
           });
-      } else {
-        db.collection('couple-riport-1')
-          .doc(
-            `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
-          )
-          .get()
-          .then((doc) => doc.data())
-          .then((data) => {
-            if (data) {
-              if (data['<২০']) setZeroRange(data['<২০']);
-              else setZeroRange({ ...ageRangeValue });
-              if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
-              else setTwentyRange({ ...ageRangeValue });
-              if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
-              else setThirtyRange({ ...ageRangeValue });
-              if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
-              else setFortyRange({ ...ageRangeValue });
-              if (data.fwaName) setFwaName(data.fwaName);
-              else setFwaName('');
-            } else {
-              setDataNull(true);
-              handleClear();
-              setTimeout(() => {
-                setDataNull(false);
-              }, 4100);
-            }
-          })
-          .catch((err) => {
-            if (err.code === 'unavailable') {
-              setStableConnection(false);
-              setTimeout(() => {
-                setStableConnection(true);
-              }, 4100);
-            }
-          });
       }
     } else if (upazilaName) {
       if (formOption === 'উপজেলা') {
@@ -407,10 +462,12 @@ const FullFormTable = (props) => {
               let newThirtyRange = [];
               let newFortyRange = [];
               Object.entries(data).map((item) => {
-                newZeroRange.push(item[1].zeroRange);
-                newTwentyRange.push(item[1].twentyRange);
-                newThirtyRange.push(item[1].thirtyRange);
-                newFortyRange.push(item[1].fortyRange);
+                if (item[1] !== null) {
+                  newZeroRange.push(item[1].zeroRange);
+                  newTwentyRange.push(item[1].twentyRange);
+                  newThirtyRange.push(item[1].thirtyRange);
+                  newFortyRange.push(item[1].fortyRange);
+                }
               });
               setZeroRange(await rangeDataFromDB(newZeroRange));
               setTwentyRange(await rangeDataFromDB(newTwentyRange));
@@ -529,31 +586,38 @@ const FullFormTable = (props) => {
     }
   }, [riportingYear, districtName, upazilaName, unionName, formOption]);
 
-  const getFormNumber = () => {
+  useEffect(() => {
+    setIsBtnDisable(false);
     if (unionName) {
-      if (formOption === 'ইউনিয়ন') return '২';
-      else return '১';
+      if (formOption === 'ইউনিয়ন') {
+        db.collection('couple-riport-3')
+          .doc(`${districtName}.${upazilaName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            Object.entries(data).map((item) => {
+              if (item[0] === unionName && item[1] !== null) {
+                setIsBtnDisable(true);
+              }
+            });
+          });
+      }
     } else if (upazilaName) {
-      if (formOption === 'উপজেলা') return '৩';
-      else return '২';
-    } else if (districtName) {
-      if (formOption === 'জেলা') return '৪';
-      else return '৩';
-    } else return '';
-  };
-
-  const getSubmitText = () => {
-    if (unionName) {
-      if (formOption === 'ইউনিয়ন') return 'উপজেলায়';
-      else return 'ইউনিয়নে';
-    } else if (upazilaName) {
-      if (formOption === 'উপজেলা') return 'জেলায়';
-      else return 'উপজেলায়';
-    } else if (districtName) {
-      if (formOption === 'জেলা') return 'বিভাগে';
-      else return 'জেলায়';
-    } else return '';
-  };
+      if (formOption === 'উপজেলা') {
+        db.collection('couple-riport-4')
+          .doc(`${districtName}.${riportingYear}`)
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            Object.entries(data).map((item) => {
+              if (item[0] === upazilaName && item[1] !== null) {
+                setIsBtnDisable(true);
+              }
+            });
+          });
+      }
+    }
+  }, [riportingYear, districtName, upazilaName, unionName, formOption]);
 
   useEffect(() => {
     let rotates = document.getElementsByClassName('rotate');
@@ -561,36 +625,6 @@ const FullFormTable = (props) => {
       rotates[i].style.height = rotates[i].offsetWidth + 50 + 'px';
     }
   }, []);
-
-  const renderAlert = () => {
-    if (unionName) {
-      if (formOption !== 'ইউনিয়ন') {
-        if (unionName.includes('এনজিও')) {
-          return `${unionName} এর ${formOption} ইউনিটের`;
-        } else {
-          return `${unionName} ইউনিয়নের ${formOption} ইউনিটের`;
-        }
-      } else {
-        if (unionName.includes('এনজিও')) {
-          return `${unionName} এর`;
-        } else {
-          return `${unionName} ইউনিয়নের`;
-        }
-      }
-    } else if (upazilaName) {
-      if (formOption !== 'উপজেলা') {
-        return `${formOption} ইউনিয়নের`;
-      } else {
-        return `${upazilaName} উপজেলার`;
-      }
-    } else if (districtName) {
-      if (formOption !== 'জেলা') {
-        return `${formOption} উপজেলার`;
-      } else {
-        return `${districtName} জেলার`;
-      }
-    }
-  };
 
   return (
     <div>
@@ -616,7 +650,13 @@ const FullFormTable = (props) => {
             </div>
             <div>
               <Typography className={classes.borderText}>
-                দম্পতি ফরম - {getFormNumber()}
+                দম্পতি ফরম -{' '}
+                {getFormNumber(
+                  unionName,
+                  upazilaName,
+                  districtName,
+                  formOption
+                )}
               </Typography>
             </div>
           </div>
@@ -657,7 +697,13 @@ const FullFormTable = (props) => {
                 </Alert>
               ) : dataNull ? (
                 <Alert className={classes.alertText} severity='warning'>
-                  {renderAlert()} তথ্য খুঁজে পাওয়া যায়নি
+                  {renderAlert(
+                    unionName,
+                    upazilaName,
+                    districtName,
+                    formOption
+                  )}{' '}
+                  তথ্য খুঁজে পাওয়া যায়নি
                 </Alert>
               ) : (
                 ''
@@ -693,8 +739,9 @@ const FullFormTable = (props) => {
           color='secondary'
           variant='contained'
           onClick={handleDataSubmit}
+          disabled={isBtnDisable}
         >
-          {getSubmitText()} সাবমিট
+          {getSubmitText(unionName, upazilaName, districtName, formOption)}
         </Button>
         <Button
           color='primary'
@@ -707,16 +754,13 @@ const FullFormTable = (props) => {
       {submitCompleted && (
         <Alert className={classes.alertText} severity='success'>
           আপনার প্রতিবেদনটি{' '}
-          {unionName
-            ? formOption && formOption !== 'ইউনিয়ন'
-              ? 'ইউনিয়নে'
-              : 'উপজেলায়'
-            : upazilaName
-            ? 'জেলায়'
-            : districtName
-            ? 'বিভাগে'
-            : ''}{' '}
+          {getCompletedText(unionName, upazilaName, districtName, formOption)}{' '}
           সাবমিট হয়েছে
+        </Alert>
+      )}
+      {deleteCompleted && (
+        <Alert className={classes.alertText} severity='success'>
+          {formOption}র প্রতিবেদনটি ডিলিট হয়েছে
         </Alert>
       )}
     </div>

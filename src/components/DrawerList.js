@@ -84,7 +84,7 @@ const DrawerList = ({ closeDrawer }) => {
               <ListItemIcon>
                 <Assignment />
               </ListItemIcon>
-              <ListItemText primary='দম্পতি ফরম' />
+              <ListItemText primary='ফরম' />
             </ListItem>
           </NavLink>
         )}
@@ -102,7 +102,7 @@ const DrawerList = ({ closeDrawer }) => {
               <ListItemIcon>
                 <Assignment />
               </ListItemIcon>
-              <ListItemText primary='সম্পূর্ণ প্রতিবেদন' />
+              <ListItemText primary='দম্পতি প্রতিবেদন' />
             </ListItem>
           </NavLink>
         )}
