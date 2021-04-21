@@ -371,10 +371,10 @@ const FullFormTable = (props) => {
 
     if (unionName) {
       if (
-        formOption != 'ইউনিয়ন' &&
-        formOption != 'উপজেলা' &&
-        formOption != 'জেলা' &&
-        formOption != ''
+        formOption !== 'ইউনিয়ন' &&
+        formOption !== 'উপজেলা' &&
+        formOption !== 'জেলা' &&
+        formOption !== ''
       ) {
         db.collection('couple-riport-1')
           .doc(
@@ -595,11 +595,13 @@ const FullFormTable = (props) => {
           .get()
           .then((doc) => doc.data())
           .then((data) => {
-            Object.entries(data).map((item) => {
-              if (item[0] === unionName && item[1] !== null) {
-                setIsBtnDisable(true);
-              }
-            });
+            if (data) {
+              Object.entries(data).map((item) => {
+                if (item[0] === unionName && item[1] !== null) {
+                  setIsBtnDisable(true);
+                }
+              });
+            }
           });
       }
     } else if (upazilaName) {
@@ -609,11 +611,13 @@ const FullFormTable = (props) => {
           .get()
           .then((doc) => doc.data())
           .then((data) => {
-            Object.entries(data).map((item) => {
-              if (item[0] === upazilaName && item[1] !== null) {
-                setIsBtnDisable(true);
-              }
-            });
+            if (data) {
+              Object.entries(data).map((item) => {
+                if (item[0] === upazilaName && item[1] !== null) {
+                  setIsBtnDisable(true);
+                }
+              });
+            }
           });
       }
     }

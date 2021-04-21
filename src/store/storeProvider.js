@@ -14,7 +14,7 @@ import App from '../App';
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_PROJECT_AD,
+  projectId: process.env.REACT_APP_PROJECT_ID,
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
@@ -23,8 +23,6 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
-
-// db.enablePersistence();
 
 const StoreProvider = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -56,7 +54,10 @@ const StoreProvider = () => {
             doc.data().upazila === upazila &&
             doc.data().union === unionName
           ) {
-            existMessage = `${unionName} ইউনিয়ন এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
+            if (unionName.includes('এনজিও')) {
+              existMessage = `${unionName} এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
+            } else
+              existMessage = `${unionName} ইউনিয়ন এর একাউন্ট ইতোমধ্যে খোলা হয়েছে`;
           } else if (
             accountType === 'উপজেলা একাউন্ট' &&
             doc.data().accountType === 'উপজেলা একাউন্ট' &&
