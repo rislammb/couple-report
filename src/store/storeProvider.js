@@ -40,7 +40,7 @@ const StoreProvider = () => {
     upazila,
     union
   ) => {
-    const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও.${name}` : union;
+    const unionName = union === 'বেসরকারী সংস্থা' ? `এনজিও-${name}` : union;
     let existMessage = '';
     await db
       .collection('users')

@@ -139,12 +139,14 @@ const FullFormTable = (props) => {
       ) {
         if (formOption === 'ইউনিয়ন') {
           // start union
+          const getConfirmText = () => {
+            if (unionName.includes('এনজিও'))
+              return `আপনি কি ${unionName}র প্রতিবেদনটি সাবমিট করতে চান?`;
+            else
+              return `আপনি কি ${unionName} ইউনিয়নের প্রতিবেদনটি সাবমিট করতে চান?`;
+          };
 
-          if (
-            window.confirm(
-              `আপনি কি ${unionName} ইউনিয়নের প্রতিবেদনটি সাবমিট করতে চান?`
-            )
-          ) {
+          if (window.confirm(getConfirmText())) {
             const dataToSubmit = {
               riportingYear,
               districtName,
@@ -330,7 +332,11 @@ const FullFormTable = (props) => {
           }
         }
       } else {
-        alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+        if (formOption === 'উপজেলা') {
+          alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+        } else {
+          alert('আপনি এই প্রতিবেদনটি ডিলিটের জন্য অনুমেদিত নন!');
+        }
       }
     } else if (districtName) {
       if (
@@ -360,7 +366,11 @@ const FullFormTable = (props) => {
               });
           }
         }
-      } else alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+      } else {
+        if (formOption === 'জেলা') {
+          alert('আপনি এই প্রতিবেদনটি সাবমিটের জন্য অনুমেদিত নন!');
+        } else alert('আপনি এই প্রতিবেদনটি ডিলিটের জন্য অনুমেদিত নন!');
+      }
     }
   };
 
@@ -410,7 +420,7 @@ const FullFormTable = (props) => {
               }, 4100);
             }
           });
-      } else {
+      } else if (formOption === 'ইউনিয়ন') {
         db.collection('couple-riport-2')
           .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
           .get()
@@ -496,6 +506,7 @@ const FullFormTable = (props) => {
           .then((doc) => doc.data())
           .then((data) => {
             if (data) {
+              console.log(data);
               setZeroRange(data[formOption].zeroRange);
               setTwentyRange(data[formOption].twentyRange);
               setThirtyRange(data[formOption].thirtyRange);

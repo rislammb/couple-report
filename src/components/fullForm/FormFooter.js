@@ -18,35 +18,20 @@ const useStyles = makeStyles({
 const FormFooter = ({ districtName, upazilaName, unionName, formOption }) => {
   const classes = useStyles();
 
-  return (
-    <div className={classes.footerContainer}>
-      <br />
-      <br />
-      <br />
-      <br />
-      <div className={classes.footerTextContainer}>
-        <Typography className={classes.date}>তারিখঃ</Typography>
-        {formOption ? (
-          unionName?.includes('এনজিও') ? (
+  const getFooterText = () => {
+    if (unionName) {
+      if (formOption === 'ইউনিয়ন') {
+        if (unionName.includes('এনজিও')) {
+          return (
             <div>
               <Typography>{unionName}</Typography>
               <Typography>
                 {upazilaName}, {districtName}।
               </Typography>
             </div>
-          ) : formOption === 'জেলা' ? (
-            <div>
-              <Typography>উপ-পরিচালক</Typography>
-              <Typography>{districtName} জেলা।</Typography>
-            </div>
-          ) : formOption === 'উপজেলা' ? (
-            <div>
-              <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
-              <Typography>
-                {upazilaName}, {districtName}।
-              </Typography>
-            </div>
-          ) : formOption === 'ইউনিয়ন' ? (
+          );
+        } else {
+          return (
             <div>
               <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
               <Typography>{unionName} ইউনিয়ন</Typography>
@@ -54,7 +39,22 @@ const FormFooter = ({ districtName, upazilaName, unionName, formOption }) => {
                 {upazilaName}, {districtName}।
               </Typography>
             </div>
-          ) : (
+          );
+        }
+      } else {
+        if (unionName.includes('এনজিও')) {
+          return (
+            <div>
+              <Typography>
+                {formOption} ইউনিট, {unionName}
+              </Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          );
+        } else {
+          return (
             <div>
               <Typography>পরিবার কলাণ সহকারী</Typography>
               <Typography>
@@ -64,10 +64,71 @@ const FormFooter = ({ districtName, upazilaName, unionName, formOption }) => {
                 {upazilaName}, {districtName}।
               </Typography>
             </div>
-          )
-        ) : (
-          ''
-        )}
+          );
+        }
+      }
+    } else if (upazilaName) {
+      if (formOption === 'উপজেলা') {
+        return (
+          <div>
+            <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
+            <Typography>
+              {upazilaName}, {districtName}।
+            </Typography>
+          </div>
+        );
+      } else {
+        if (formOption.includes('এনজিও')) {
+          return (
+            <div>
+              <Typography>{formOption}</Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <Typography>পরিবার পরিকল্পনা পরিদর্শক</Typography>
+              <Typography>{formOption} ইউনিয়ন</Typography>
+              <Typography>
+                {upazilaName}, {districtName}।
+              </Typography>
+            </div>
+          );
+        }
+      }
+    } else if (districtName) {
+      if (formOption === 'জেলা') {
+        return (
+          <div>
+            <Typography>উপ-পরিচালক</Typography>
+            <Typography>{districtName} জেলা।</Typography>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <Typography>উপজেলা পরিবার পরিকল্পনা কর্মকর্তা</Typography>
+            <Typography>
+              {formOption}, {districtName}।
+            </Typography>
+          </div>
+        );
+      }
+    }
+  };
+
+  return (
+    <div className={classes.footerContainer}>
+      <br />
+      <br />
+      <br />
+      <br />
+      <div className={classes.footerTextContainer}>
+        <Typography className={classes.date}>তারিখঃ</Typography>
+        {getFooterText()}
       </div>
     </div>
   );
