@@ -20,6 +20,7 @@ import {
   getSubmitText,
   getCompletedText,
 } from '../../functions';
+import FormHeader from './FormHeader';
 
 const useStyles = makeStyles({
   printContainer: {
@@ -380,47 +381,7 @@ const FullFormTable = (props) => {
     handleClear();
 
     if (unionName) {
-      if (
-        formOption !== 'ইউনিয়ন' &&
-        formOption !== 'উপজেলা' &&
-        formOption !== 'জেলা' &&
-        formOption !== ''
-      ) {
-        db.collection('couple-riport-1')
-          .doc(
-            `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
-          )
-          .get()
-          .then((doc) => doc.data())
-          .then((data) => {
-            if (data) {
-              if (data['<২০']) setZeroRange(data['<২০']);
-              else setZeroRange({ ...ageRangeValue });
-              if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
-              else setTwentyRange({ ...ageRangeValue });
-              if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
-              else setThirtyRange({ ...ageRangeValue });
-              if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
-              else setFortyRange({ ...ageRangeValue });
-              if (data.fwaName) setFwaName(data.fwaName);
-              else setFwaName('');
-            } else {
-              setDataNull(true);
-              handleClear();
-              setTimeout(() => {
-                setDataNull(false);
-              }, 4100);
-            }
-          })
-          .catch((err) => {
-            if (err.code === 'unavailable') {
-              setStableConnection(false);
-              setTimeout(() => {
-                setStableConnection(true);
-              }, 4100);
-            }
-          });
-      } else if (formOption === 'ইউনিয়ন') {
+      if (formOption === 'ইউনিয়ন') {
         db.collection('couple-riport-2')
           .doc(`${districtName}.${upazilaName}.${riportingYear}.${unionName}`)
           .get()
@@ -442,6 +403,41 @@ const FullFormTable = (props) => {
               setTwentyRange(await rangeDataFromDB(newTwentyRange));
               setThirtyRange(await rangeDataFromDB(newThirtyRange));
               setFortyRange(await rangeDataFromDB(newFortyRange));
+            } else {
+              setDataNull(true);
+              handleClear();
+              setTimeout(() => {
+                setDataNull(false);
+              }, 4100);
+            }
+          })
+          .catch((err) => {
+            if (err.code === 'unavailable') {
+              setStableConnection(false);
+              setTimeout(() => {
+                setStableConnection(true);
+              }, 4100);
+            }
+          });
+      } else if (formOption !== 'উপজেলা' && formOption !== 'জেলা') {
+        db.collection('couple-riport-1')
+          .doc(
+            `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`
+          )
+          .get()
+          .then((doc) => doc.data())
+          .then((data) => {
+            if (data) {
+              if (data['<২০']) setZeroRange(data['<২০']);
+              else setZeroRange({ ...ageRangeValue });
+              if (data['২০-২৯']) setTwentyRange(data['২০-২৯']);
+              else setTwentyRange({ ...ageRangeValue });
+              if (data['৩০-৩৯']) setThirtyRange(data['৩০-৩৯']);
+              else setThirtyRange({ ...ageRangeValue });
+              if (data['৪০-৪৯']) setFortyRange(data['৪০-৪৯']);
+              else setFortyRange({ ...ageRangeValue });
+              if (data.fwaName) setFwaName(data.fwaName);
+              else setFwaName('');
             } else {
               setDataNull(true);
               handleClear();
@@ -506,7 +502,6 @@ const FullFormTable = (props) => {
           .then((doc) => doc.data())
           .then((data) => {
             if (data) {
-              console.log(data);
               setZeroRange(data[formOption].zeroRange);
               setTwentyRange(data[formOption].twentyRange);
               setThirtyRange(data[formOption].thirtyRange);
@@ -681,27 +676,12 @@ const FullFormTable = (props) => {
           </Typography>
           <Typography variant='body2'>(বছরে একবার পূরণীয়)</Typography>
           <div className={classes.info}>
-            {formOption === 'জেলা' ? (
-              <Typography>জেলাঃ {districtName}</Typography>
-            ) : formOption === 'উপজেলা' ? (
-              <>
-                <Typography>উপজেলাঃ {upazilaName}</Typography>
-                <Typography>জেলাঃ {districtName}</Typography>
-              </>
-            ) : formOption === 'ইউনিয়ন' ? (
-              <>
-                <Typography>ইউনিয়নঃ {unionName}</Typography>
-                <Typography>উপজেলাঃ {upazilaName}</Typography>
-                <Typography>জেলাঃ {districtName}</Typography>
-              </>
-            ) : (
-              <>
-                <Typography>ইউনিটঃ {formOption}</Typography>
-                <Typography>ইউনিয়নঃ {unionName}</Typography>
-                <Typography>উপজেলাঃ {upazilaName}</Typography>
-                <Typography>জেলাঃ {districtName}</Typography>
-              </>
-            )}
+            <FormHeader
+              districtName={districtName}
+              upazilaName={upazilaName}
+              unionName={unionName}
+              formOption={formOption}
+            />
             <Typography>বছরঃ {riportingYear}খ্রিঃ</Typography>
           </div>
           <div className='fullFormTable'>

@@ -48,13 +48,13 @@ const LoadRiportForm = (props) => {
 
   useEffect(() => {
     setFormOption('');
-    if (unionName) setFormOption('ইউনিয়ন');
-    else if (upazilaName) setFormOption('উপজেলা');
-    else if (districtName) setFormOption('জেলা');
-    else setFormOption('');
-  }, [unionName, upazilaName, districtName]);
+    if (unionName) return setFormOption('ইউনিয়ন');
+    else if (upazilaName) return setFormOption('উপজেলা');
+    else if (districtName) return setFormOption('জেলা');
+  }, [districtName, upazilaName, unionName]);
 
   useEffect(() => {
+    setSubmittedNumber('০');
     if (unionName) {
       return db
         .collection('couple-riport-2')
@@ -100,7 +100,7 @@ const LoadRiportForm = (props) => {
           }
         });
     }
-  }, [formOption, unionName, upazilaName, districtName]);
+  }, [riportingYear, formOption, unionName, upazilaName, districtName]);
 
   return (
     <div className={classes.root}>
