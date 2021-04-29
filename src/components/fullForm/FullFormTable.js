@@ -419,7 +419,17 @@ const FullFormTable = (props) => {
               }, 4100);
             }
           });
-      } else if (formOption !== 'উপজেলা' && formOption !== 'জেলা') {
+      } else if (
+        formOption === '১ক' ||
+        formOption === '১খ' ||
+        formOption === '১গ' ||
+        formOption === '২ক' ||
+        formOption === '২খ' ||
+        formOption === '২গ' ||
+        formOption === '৩ক' ||
+        formOption === '৩খ' ||
+        formOption === '৩গ'
+      ) {
         db.collection('couple-riport-1')
           .doc(
             `${districtName}.${upazilaName}.${riportingYear}.${unionName}.${formOption}`

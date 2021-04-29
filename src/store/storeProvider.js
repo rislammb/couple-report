@@ -249,7 +249,7 @@ export default StoreProvider;
 const commonThemeValue = {
   palette: {
     primary: {
-      main: '#058697',
+      main: '#00a38d',
       light: '#14e8f0',
       dark: '#0f7f83',
     },
