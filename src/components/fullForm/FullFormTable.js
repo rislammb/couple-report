@@ -393,10 +393,12 @@ const FullFormTable = (props) => {
               let newThirtyRange = [];
               let newFortyRange = [];
               Object.entries(data).map((item) => {
-                newZeroRange.push(item[1].zeroRange);
-                newTwentyRange.push(item[1].twentyRange);
-                newThirtyRange.push(item[1].thirtyRange);
-                newFortyRange.push(item[1].fortyRange);
+                if (item[1] !== null) {
+                  newZeroRange.push(item[1].zeroRange);
+                  newTwentyRange.push(item[1].twentyRange);
+                  newThirtyRange.push(item[1].thirtyRange);
+                  newFortyRange.push(item[1].fortyRange);
+                }
               });
 
               setZeroRange(await rangeDataFromDB(newZeroRange));
@@ -546,10 +548,12 @@ const FullFormTable = (props) => {
               let newThirtyRange = [];
               let newFortyRange = [];
               Object.entries(data).map((item) => {
-                newZeroRange.push(item[1].zeroRange);
-                newTwentyRange.push(item[1].twentyRange);
-                newThirtyRange.push(item[1].thirtyRange);
-                newFortyRange.push(item[1].fortyRange);
+                if (item[1] !== null) {
+                  newZeroRange.push(item[1].zeroRange);
+                  newTwentyRange.push(item[1].twentyRange);
+                  newThirtyRange.push(item[1].thirtyRange);
+                  newFortyRange.push(item[1].fortyRange);
+                }
               });
               setZeroRange(await rangeDataFromDB(newZeroRange));
               setTwentyRange(await rangeDataFromDB(newTwentyRange));
